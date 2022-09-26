@@ -1,0 +1,354 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+            "path" : "pages/tabBar/task/task",
+            "style" : {
+				"navigationBarTitleText": "我的任务",
+				"navigationStyle":"custom"
+			}
+        },{
+            "path" : "pages/tabBar/task/detail",
+            "style" : {
+				"navigationBarTitleText": "任务详情"
+			}
+        }
+        ,{
+            "path" : "pages/tabBar/check/check",
+            "style" : {
+				"navigationBarTitleText": "绩效考核",
+				"navigationStyle":"custom"
+			}
+        }
+		,{
+		    "path" : "pages/tabBar/assign/assign",
+		    "style" : {
+				"navigationBarTitleText": "分配任务",
+				"navigationStyle":"custom"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/project",
+		    "style" : {
+				"navigationBarTitleText": "项目管理",
+				"navigationStyle":"custom"
+			}
+		}		
+		,{
+		    "path" : "pages/tabBar/project/projectdetail",
+		    "style" : {
+				"navigationBarTitleText": "项目详情"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/newproject",
+		    "style" : {
+				"navigationBarTitleText": "新建项目"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/bigmoduleing",
+		    "style" : {
+				"navigationBarTitleText": "大模块"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/newbigmodule",
+		    "style" : {
+				"navigationBarTitleText": "新建大模块"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/newsmallmodule",
+		    "style" : {
+				"navigationBarTitleText": "新建小模块"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/editbigmodule",
+		    "style" : {
+				"navigationBarTitleText": "编辑大模块"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/editbigmoduledetail",
+		    "style" : {
+				"navigationBarTitleText": "编辑大模块详情"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/editsmallmodule",
+		    "style" : {
+				"navigationBarTitleText": "编辑小模块"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/editsmallmoduledetail",
+		    "style" : {
+				"navigationBarTitleText": "编辑小模块详情"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/worksheeting",
+		    "style" : {
+				"navigationBarTitleText": "任务工单"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/newworksheet",
+		    "style" : {
+				"navigationBarTitleText": "新建任务工单"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/editworksheet",
+		    "style" : {
+				"navigationBarTitleText": "编辑任务工单"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/editworksheetdetail",
+		    "style" : {
+				"navigationBarTitleText": "编辑任务工单详情"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/editproject",
+		    "style" : {
+				"navigationBarTitleText": "编辑项目"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/smallmoduleing",
+		    "style" : {
+				"navigationBarTitleText": "小模块"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/bigmoduleed",
+		    "style" : {
+				"navigationBarTitleText": "大模块"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/worksheeted",
+		    "style" : {
+				"navigationBarTitleText": "任务工单"
+			}
+		}
+		,{
+		    "path" : "pages/tabBar/project/smallmoduleed",
+		    "style" : {
+				"navigationBarTitleText": "小模块"
+			}
+		}
+        ,{
+            "path" : "pages/tabBar/assign/newtask",
+            "style" : {
+				"navigationBarTitleText": "新建任务"
+			}
+        }
+        ,{
+            "path" : "pages/tabBar/assign/assigntask",
+            "style" : {
+				"navigationBarTitleText": "分配任务"
+			}
+        }
+        ,{
+            "path" : "pages/tabBar/assign/edittask",
+            "style" : {
+				"navigationBarTitleText": "编辑任务"
+			}
+        }
+        ,{
+            "path" : "pages/detail/detail01",
+            "style" : {
+				"navigationBarTitleText": "任务详情01"
+			}
+        }
+		,{
+		    "path" : "pages/detail/detail02",
+		    "style" : {
+				"navigationBarTitleText": "任务详情02"
+			}
+		}
+		,{
+		    "path" : "pages/usercenter/usercenter",
+		    "style" : {
+				"navigationBarTitleText": "个人中心",
+				"navigationStyle":"custom"
+			}
+		}
+
+        ,{
+            "path" : "pages/usercenter/personalfile",
+            "style" : {
+				"navigationBarTitleText": "个人档案"
+			}
+        }
+        ,{
+            "path" : "pages/usercenter/positionfile",
+            "style" : {
+				"navigationBarTitleText": "岗位说明"
+			}
+        }
+        ,{
+            "path" : "pages/usercenter/department",
+            "style" : {
+				"navigationBarTitleText": "部门职能"
+			}
+        }
+        ,{
+            "path" : "pages/usercenter/feedback",
+            "style" : {
+				"navigationBarTitleText": "软件反馈"
+			}
+        }
+        ,{
+            "path" : "pages/usercenter/team",
+            "style" : {
+				"navigationBarTitleText": "我的团队"
+			}
+        }
+        ,{
+            "path" : "pages/usercenter/message",
+            "style" : {
+				"navigationBarTitleText": "消息中心"
+			}
+        }
+        ,{
+            "path" : "pages/usercenter/mykpi",
+            "style" : {
+				"navigationBarTitleText": "我的绩效"
+			}
+        }
+        ,{
+            "path" : "pages/usercenter/teamkpi",
+            "style" : {
+				"navigationBarTitleText": "团队绩效"
+			}
+        }
+		,{
+		    "path" : "pages/usercenter/companyinfo",
+		    "style" : {
+				"navigationBarTitleText": "企业信息"
+			}
+		}
+		,{
+		    "path" : "pages/usercenter/companyedit",
+		    "style" : {
+				"navigationBarTitleText": "编辑企业"
+			}
+		}
+		,{
+		    "path" : "pages/usercenter/stafflist",
+		    "style" : {
+				"navigationBarTitleText": "员工列表"
+			}
+		}
+		,{
+		    "path" : "pages/usercenter/addstaff",
+		    "style" : {
+				"navigationBarTitleText": "添加新员工"
+			}
+		}
+		,{
+		    "path" : "pages/usercenter/editstaff",
+		    "style" : {
+				"navigationBarTitleText": "编辑员工"
+			}
+		}
+		,{
+		    "path" : "pages/usercenter/deptlist",
+		    "style" : {
+				"navigationBarTitleText": "部门岗位列表"
+			}
+		}
+		,{
+		    "path" : "pages/usercenter/editdept",
+		    "style" : {
+				"navigationBarTitleText": "编辑部门"
+			}
+		}
+		,{
+		    "path" : "pages/usercenter/editpost",
+		    "style" : {
+				"navigationBarTitleText": "编辑岗位"
+			}
+		}
+		,{
+		    "path" : "pages/usercenter/adddept",
+		    "style" : {
+				"navigationBarTitleText": "新建部门"
+			}
+		}
+		,{
+		    "path" : "pages/usercenter/addpost",
+		    "style" : {
+				"navigationBarTitleText": "新建岗位"
+			}
+		}
+        ,{
+            "path" : "pages/login/login",
+            "style" : {
+				"navigationBarTitleText": "登录",
+				"navigationStyle":"custom"
+			}
+        }
+		,{
+		    "path" : "pages/login/bindphone",
+		    "style" : {
+				"navigationBarTitleText": "绑定手机",
+				"navigationStyle":"custom"
+			}
+		}
+		,{
+		    "path" : "pages/404/404",
+			"name":"404",
+		    "style" : {
+				"navigationBarTitleText": "404"
+			}
+		}
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "",
+		"navigationBarBackgroundColor": "#004343",
+		"backgroundColor": "#EEEEEE"
+	},
+	"tabBar": {
+	    "color": "#aaaaaa",
+	    "selectedColor": "#004343",
+	    "borderStyle": "black",
+	    "backgroundColor": "#ffffff",
+	    "list": [{
+	        "pagePath": "pages/tabBar/task/task",
+	        "iconPath": "static/image/icon01.png",
+	        "selectedIconPath": "static/image/icon01_G.png",
+	        "text": "我的任务"
+	    }, {
+	        "pagePath": "pages/tabBar/check/check",
+	        "iconPath": "static/image/icon02.png",
+	        "selectedIconPath": "static/image/icon02_G.png",
+	        "text": "绩效考核"
+	    },{
+	        "pagePath": "pages/tabBar/assign/assign",
+	        "iconPath": "static/image/icon03.png",
+	        "selectedIconPath": "static/image/icon03_G.png",
+	        "text": "分配任务"
+	    },{
+	        "pagePath": "pages/tabBar/project/project",
+	        "iconPath": "static/image/icon04.png",
+	        "selectedIconPath": "static/image/icon04_G.png",
+	        "text": "项目管理"
+	    }]
+	},
+	"condition": { //模式配置，仅开发期间生效
+	    "current": 0, //当前激活的模式（list 的索引项）
+	    "list": [{
+	            "name": "OA", //模式名称
+	            "path": "pages/tabBar/task/task", //启动页面，必选
+	            "query": "interval=4000&autoplay=false" //启动参数，在页面的onLoad函数里面得到。
+	        }
+	    ]
+	}
+}

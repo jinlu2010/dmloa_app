@@ -1,0 +1,220 @@
+view {
+	font-size: 14rpx;
+	line-height: 1.8;
+}
+
+page {
+	background-color: #EEEEEE;
+}
+
+.status-contents {
+	height: calc(var(--status-bar-height)+48px);
+	/* #ifdef MP-WEIXIN */
+	height: 176rpx;
+	/* #endif */
+	background-color: #004343;
+	margin-top:-18rpx;
+}
+
+.top-view {
+	width: 100%;
+	position: fixed;
+	top: 0;
+	z-index: 999;
+	/* #ifdef MP-WEIXIN */
+	margin-top: -18rpx;
+	/* #endif */
+}
+
+.status {
+	height: var(--status-bar-height);
+	/* #ifdef MP-WEIXIN */
+	height: 100rpx;
+	/* #endif */
+	background-color: #004343;
+	width: 100%;
+}
+
+.titles {
+	height: 96rpx;
+	background-color: #004343;
+	margin-top: var(--status-bar-height);
+	/* #ifdef MP-WEIXIN */
+	margin-top: 96rpx;
+	/* #endif */
+	padding: 0 20rpx;
+}
+
+.UserFace {
+	float: left;
+	line-height: 60rpx;
+	border-radius: 60rpx;
+	width: 60rpx;
+	height: 60rpx;
+	background-color: white;
+	background-size: cover;
+	/* margin-top: 18rpx; */
+}
+
+.UserFace image {
+	width: 60rpx;
+	height: 60rpx;
+}
+
+.titleText {
+	color: white;
+	font-size: 36rpx;
+	text-align: left;
+	margin-left: 20rpx;
+	float: left;
+	/* line-height: 96rpx; */
+}
+
+.RightButton .uni-icons {
+	/* width: 60rpx;
+	height: 60rpx; */
+	/* line-height: 100rpx; */
+	float: right;
+	margin-left: 10rpx;
+	margin-top: -18rpx;
+}
+
+.RightButton button {
+	float: right;
+}
+
+.RightButton .calendar-button {
+	border-radius: 30rpx;
+	background-color: transparent;
+	color: white;
+	border: 2rpx solid white;
+	height: 60rpx;
+	font-size: 24rpx;
+	line-height: 56rpx;
+	/* #ifdef MP-WEIXIN */
+	margin-top: 2px;
+	padding-left: 12rpx;
+	padding-right: 12rpx;
+	/* #endif */
+	/* margin-top: 18rpx; */
+}
+
+.RightButton {
+	/* #ifdef MP-WEIXIN */
+	margin-right: 180rpx;
+	/* #endif */
+	/* line-height: 96rpx; */
+}
+
+.place {
+	/* #ifdef APP-VUE */
+	height: var(--status-bar-height);
+	margin-top: 96rpx;
+	/* #endif */
+	/* #ifdef H5 */
+	height: var(--status-bar-height);
+	margin-top: 96rpx;
+	/* #endif */
+}
+
+.tabbar {
+	position: fixed;
+	width: 100%;
+	z-index: 999;
+}
+
+.bgtab {
+	height: 60rpx;
+	background-color: #004343;
+	box-shadow: 0px 3px 5px rgba(0, 67, 67, 0.5);
+}
+.project-bgtab{
+	height: 45rpx;
+}
+.tab-title {
+	height: 90rpx;
+	background-color: #005859;
+	margin: -45rpx 30rpx 0;
+	border-radius: 45rpx;
+	box-shadow: 0px 3px 5px rgba(0, 88, 88, 0.5);
+	position: relative;
+	z-index: 9999;
+}
+
+.tab-title view {
+	color: white;
+	font-size: 30rpx;
+	float: left;
+	width: 50%;
+	text-align: center;
+	line-height: 90rpx;
+	justify-content: center;
+	align-items: center;
+}
+
+.project .tab-title view {
+	color: white;
+	font-size: 30rpx;
+	float: left;
+	width: 33.33%;
+	text-align: center;
+	line-height: 90rpx;
+	justify-content: center;
+	align-items: center;
+}
+.project .active::after {
+	content: "";
+	height: 4rpx;
+	border-radius: 2rpx;
+	background-color: #5df2b2;
+	display: block;
+	text-align: center;
+	width: 14%;
+	top: 86rpx;
+	margin-left: 10%;
+	position: absolute;
+}
+
+.tab-title .active {
+	color: #5df2b2;
+}
+
+.active::after {
+	content: "";
+	height: 4rpx;
+	border-radius: 2rpx;
+	background-color: #5df2b2;
+	display: block;
+	text-align: center;
+	width: 20%;
+	top: 86rpx;
+	margin-left: 15%;
+	position: absolute;
+}
+
+.tab-content {
+	display: none;
+	padding-top:140rpx;
+}
+
+.tab {
+	display: block;
+}
+
+.title-left {
+	float: left;
+	/*margin-top: 8rpx;*/
+	/* #ifdef MP-WEIXIN */
+	/* #endif */
+}
+
+.title-right {
+	float: right;
+	width: 40rpx;
+	height: 40rpx;
+	margin-top: 30rpx;
+	margin-right: 10rpx;
+	/* #ifdef MP-WEIXIN */
+	margin-right: 200rpx;
+	/* #endif */
+}
