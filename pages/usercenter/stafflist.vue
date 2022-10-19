@@ -10,8 +10,8 @@
 					<view class="form-list">
 						<view class="form-list-item" @tap="EditStaff(item)" v-for="item in stafflist" :key="item.id">
 							<view class="staffname">{{item.name}}</view>
-							<view class="staffpost">设计师</view>
-							<view class="staffcontact">13524133134</view>
+							<view class="staffpost">{{item.job.name}}</view>
+							<view class="staffcontact">{{item.account}}</view>
 							<uni-icons type="arrowright" size="18" color="#CCC" class="right pt10"></uni-icons>
 						</view>
 					</view>

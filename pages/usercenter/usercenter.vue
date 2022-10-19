@@ -37,17 +37,17 @@
 		
 		<view class="list usercenterlist">
 			<view class="list-item-container usercenterlist-container">
-				<view class="list-item-content" @tap="Company">
+				<view class="list-item-content" @tap="Company" v-show="admin">
 					<image src="../../static/image/icon12.png"></image>
 					<text class="title teamkpi">企业管理</text>
 					<uni-icons type="arrowright" size="24" color="#CCC" class="right"></uni-icons>
 				</view>
-				<view class="list-item-content" @tap="Dept">
+				<view class="list-item-content" @tap="Dept" v-show="admin">
 					<image src="../../static/image/icon13.png"></image>
 					<text class="title teamkpi">部门岗位管理</text>
 					<uni-icons type="arrowright" size="24" color="#CCC" class="right"></uni-icons>
 				</view>
-				<view class="list-item-content" @tap="Staff">
+				<view class="list-item-content" @tap="Staff" v-show="admin">
 					<image src="../../static/image/icon13.png"></image>
 					<text class="title teamkpi">员工管理</text>
 					<uni-icons type="arrowright" size="24" color="#CCC" class="right"></uni-icons>
@@ -106,32 +106,25 @@
 				userid:"",
 				dept_id:"",
 				post_id:"",
-				postname:''
+				postname:'',
+				admin:false,
+				adminType:1,//0普通 1管理员
 			}
 		},
 		onLoad(){
 			this.axios.get('profile/get').then(res => {
 				this.username = res.data.data.name;
-				this.userid = res.data.data.id
-				console.log(res.data.data)
-				this.axios.get('employee/get',{
-					params: {
-						'id': this.userid
-					}
-				}).then(res => {
-					this.dept_id = res.data.data.departmentId,
-					this.post_id = res.data.data.jobId,
-					this.axios.get('job/get',{
-						params: {
-							'id': this.post_id
-						}
-					}).then(res => {
-						this.postname=res.data.data.name
-					})
-				})
+				this.userid = res.data.data.id;
+				this.post_id = res.data.data.job.id;
+				this.dept_id = res.data.data.department.id;
+				this.postname = res.data.data.job.name;
+				this.adminType = res.data.data.adminType;
+				if(this.adminType == 0){
+					this.admin = false;
+				}else{
+					this.admin = true;
+				}
 			})
-			
-			
 		},
 		methods: {
 			goBack() {
@@ -203,6 +196,6 @@
 
 <style>
 	.uni-icons{
-		line-height: 100rpx;
+		line-height: 110rpx;
 	}
 </style>

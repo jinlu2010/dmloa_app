@@ -3,6 +3,15 @@
 		<form>
 			<view class="form">
 				<view class="form-item">
+					<view class="title">身份</view>
+					<radio-group @change="adminChange">
+						<view class="btnradio">
+							<radio id="普通员工" value="0" :checked="adminType == 0">普通员工</radio>
+							<radio id="管理员" value="1" :checked="adminType == 1">管理员</radio>
+						</view>
+					</radio-group>
+				</view>
+				<view class="form-item">
 					<view class="title">姓名</view>
 					<input placeholder="请输入姓名" class="input" v-model="name" />
 				</view>
@@ -10,8 +19,8 @@
 					<view class="title">性别</view>
 					<radio-group @change="genderChange">
 						<view class="btnradio">
-							<radio id="男" value="0">男</radio>
-							<radio id="女" value="1">女</radio>
+							<radio id="男" value="0" :checked="gender_id == 0">男</radio>
+							<radio id="女" value="1" :checked="gender_id == 1">女</radio>
 						</view>
 					</radio-group>
 				</view>
@@ -47,7 +56,15 @@
 						</view>
 					</picker>
 				</view>
-				
+				<view class="form-item">
+					<view class="title">负责人</view>
+					<radio-group @change="managerChange">
+						<view class="btnradio">
+							<radio id="是" value="true" :checked="is_manager == true">是</radio>
+							<radio id="否" value="false" :checked="is_manager == false">否</radio>
+						</view>
+					</radio-group>
+				</view>
 
 				<view class="form-item">
 					<view class="title">汇报对象</view>
@@ -68,19 +85,18 @@
 				<view class="form-item">
 					<view class="title">岗位技能</view>
 					<view class="textarea">
-						<textarea @blur="skillinBlur" auto-height placeholder="请输入岗位技能" v-model="skillin" />
+						<textarea placeholder="请输入岗位技能" v-model="skillin" />
 					</view>
 				</view>
 				<view class="form-item">
 					<view class="title">岗外技能</view>
 					<view class="textarea">
-						<textarea @blur="skilloutBlur" auto-height placeholder="请输入岗外技能" v-model="skillout" />
+						<textarea placeholder="请输入岗外技能" v-model="skillout" />
 					</view>
 				</view>
 			</view>
 			<view class="btn">
 				<button class="btngreen btnform" @click="addStaff()">保存</button>
-				<button class="btnblue border100 mr60" @click="DelStaff()">删除</button>
 			</view>
 		</form>
 	</view>
@@ -114,6 +130,7 @@
 				user_id:'',
 				name:'',
 				gender_id:0,
+				adminType:0,
 				birthday: getDate({format: true}),
 				startDate: getDate('start'),
 				endDate: getDate('end'),
@@ -125,24 +142,20 @@
 				post:0,
 				post_id:0,
 				postArr: [],
+				report:0,
 				report_id:0,
-				reportArr:[{
-					id: 0,
-					name: '张小小',
-				},{
-					id: 1,
-					name: '印雪梅',
-				}],
-				status_id:0,
+				reportArr:[],
+				status_id:1,
 				statusArr:[{
 					id: 0,
-					name: '在职',
+					name: '离职',
 				},{
 					id: 1,
-					name: '离职',
+					name: '在职',
 				}],
 				skillin:'',
-				skillout:''
+				skillout:'',
+				is_manager:false
 			}
 		},
 		onLoad(option) {
@@ -153,32 +166,48 @@
 				}
 			}).then(res => {
 				this.phone = res.data.data.account,
-				this.dept = res.data.data.departmentId,
-				this.post = res.data.data.jobId,
+				this.dept = res.data.data.department.id,
+				this.post = res.data.data.job.id,
 				this.name = res.data.data.name,
+				this.gender_id = res.data.data.gender,
+				this.birthday = res.data.data.birthDay,
+				this.email = res.data.data.email,
+				this.status_id = res.data.data.status,
+				this.skillin = res.data.data.jobSkill,
+				this.skillout = res.data.data.skill,
+				this.adminType = res.data.data.adminType,
+				this.is_manager = res.data.data.manager
+				if(res.data.data.leader == null){
+					this.report = res.data.data.leader
+				}else{
+					this.report = res.data.data.leader.id
+				};
 				console.log(res.data.data)
-			})
-			
-			this.axios.get('department/get_all').then(res => {
-				this.deptArr = res.data.data
-				let deptlist = this.deptArr
-				this.dept_id = (deptlist).findIndex ((deptlist) => deptlist.id  ==  this.dept );
-			})
-			this.axios.get('job/get_all').then(res => {
-				this.postArr = res.data.data
-				let postlist = this.postArr
-				this.post_id = (postlist).findIndex ((postlist) => postlist.id  ==  this.post );
-			})
-			
-			this.axios.get('department/get_all').then(res => {
-				this.deptArr = res.data.data
-				this.axios.get('job/get_all',{
-					params: {
-						'department_id': this.deptArr[this.dept_id].id
+				this.axios.get('department/get_all').then(res => {
+					this.deptArr = res.data.data
+					console.log('this.deptArr:',this.deptArr)
+					let deptlist = this.deptArr
+					this.dept_id = (deptlist).findIndex ((deptlist) => deptlist.id  ==  this.dept);
+					this.reportArr=[] //让列表为空，否则列表会无限增加
+					for(let i =0; i< res.data.data.length; i++){//取id值
+						this.reportArr.push({
+							id:res.data.data[i].manager.id,
+							name:res.data.data[i].manager.name,
+						})
 					}
-				}).then(res => {
-					this.postArr = res.data.data
+					let reportlist = this.reportArr
+					this.report_id = (reportlist).findIndex ((reportlist) => reportlist.id  ==  this.report);
 				})
+				this.axios.get('job/get_all').then(res => {
+					this.postArr = res.data.data
+					let postlist = this.postArr
+					this.post_id = (postlist).findIndex ((postlist) => postlist.id  ==  this.post);
+				})
+				// this.axios.get('employee/get_all').then(res => {
+				// 	this.reportArr = res.data.data
+				// 	let reportlist = this.reportArr
+				// 	this.report_id = (reportlist).findIndex ((reportlist) => reportlist.id  ==  this.report);
+				// })
 			})
 		},
 		methods: {
@@ -190,6 +219,14 @@
 					department_id: this.deptArr[this.dept_id].id,
 					job_id: this.postArr[this.post_id].id,
 					name: this.name,
+					birthDay: this.birthday,
+					email: this.email,
+					gender: this.gender_id,
+					jobSkill: this.skillin,
+					skill: this.skillout,
+					status: this.status_id,
+					superior_id: this.reportArr[this.report_id].id,
+					adminType: this.adminType
 				}
 				let staff = JSON.stringify(data);
 				console.log(staff);
@@ -200,7 +237,7 @@
 						if (res.data.code == 200) {
 							uni.showModal({
 								title: "提示",
-								content: '恭喜您，添加员工成功！',
+								content: '恭喜您，修改员工成功！',
 								confirmText: '返回列表',//这块是确定按钮的文字
 								cancelText:'再建一条',//这块是取消的文字
 								success: function(res) {
@@ -226,20 +263,25 @@
 			genderChange: function(e) {
 				this.gender_id = e.detail.value
 			},
+			managerChange: function(e){
+				this.is_manager = e.detail.value
+			},
+			adminChange: function(e) {
+				this.adminType = e.detail.value
+			},
 			birthdayChange: function(e) {
 				this.birthday = e.target.value
 			},
 			deptChange: function(e) {
 				this.dept_id = e.detail.value
-				this.axios.get('department/get_all').then(res => {
-					this.deptArr = res.data.data
-					this.axios.get('job/get_all',{
-						params: {
-							'department_id': this.deptArr[this.dept_id].id
-						}
-					}).then(res => {
-						this.postArr = res.data.data
-					})
+				this.report_id = e.detail.value
+				this.axios.get('job/get_all',{
+					params: {
+						'department_id': this.deptArr[this.dept_id].id
+					}
+				}).then(res => {
+					this.postArr = res.data.data
+					this.post_id = 0
 				})
 			},
 			postChange: function(e) {
@@ -258,5 +300,8 @@
 <style>
 	.btn{
 		padding-bottom: 40rpx;
+	}
+	.textarea{
+		height: 200rpx;
 	}
 </style>

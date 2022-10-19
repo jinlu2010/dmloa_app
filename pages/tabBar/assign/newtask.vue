@@ -30,7 +30,7 @@
 							<uni-icons type="arrowdown" size="12" color="#999" class="pl20"></uni-icons>
 						</view>
 					</picker>
-					<picker @change="moduleArrChange" :value="module_id" :range="moduleArr" range-key="name" @click="moduleList">
+					<picker @change="moduleArrChange" :value="module_id" :range="moduleArr" range-key="name" >
 						<view class="input">{{moduleArr[module_id].name}}
 							<uni-icons type="arrowdown" size="12" color="#999" class="pl20"></uni-icons>
 						</view>
@@ -81,7 +81,7 @@
 				<view class="form-item">
 					<view class="title">特别提醒</view>
 					<view class="textarea">
-						<textarea @blur="bindTextAreaBlur" auto-height placeholder="请输入注意事项" v-model="remark" />
+						<textarea auto-height placeholder="请输入注意事项" v-model="remark" />
 					</view>
 				</view>
 			</view>
@@ -251,18 +251,7 @@
 					})
 				})
 			},
-			// moduleList: function(e) {
-			// 	console.log('project_id:',this.projectArr[this.project_id].id)
-			// 	this.axios.get('module/get_all',{
-			// 		params: {
-			// 			'level_id': 1,
-			// 			'project_id':this.projectArr[this.project_id].id
-			// 		}
-			// 	}).then(res => {
-			// 		this.moduleArr = res.data.data
-			// 		console.log('module:',this.moduleArr)
-			// 	})
-			// },
+
 			projectArrChange: function(e) {
 				this.project_id = e.detail.value
 				this.axios.get('module/get_all',{
@@ -317,19 +306,7 @@
 			executorChange:function(e){
 				this.user_ids=e.detail.value
 				console.log('user_ids:',this.user_ids)
-
-				/* for(let i=0; i<e.detail.value.length; i++){//取id值
-					let arr={};
-					arr[i]=parseInt(e.detail.value[i]);
-					append(arr[i])
-					this.user_ids = arr
-					console.log('arr',arr)
-					console.log('user_ids:',this.user_ids)
-				} */
-			},
-			bindTextAreaBlur: function(e) {
-				console.log(e.detail.value)
-			},
+			}
 		}
 	}
 </script>

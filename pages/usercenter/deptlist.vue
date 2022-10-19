@@ -15,6 +15,7 @@
 								{{item.name}}
 								<uni-icons type="trash" size="20" color="#999" class="pl40 right" @click="DelDept(item)"></uni-icons>
 								<uni-icons type="compose" size="20" color="#999" class="pl40 right" @click="EditDept(item)"></uni-icons>
+								<uni-icons type="contact" size="20" color="#999" class="pl40 right" @click="tapshow(item)"></uni-icons>
 								
 								<view class="deptname" v-for="post in item.post" :key="post.id">
 									<text class="pl60">{{post.name}}</text>
@@ -22,6 +23,30 @@
 									<uni-icons type="compose" size="20" color="#999" class="pl40 right" @click="EditPost(post)"></uni-icons>
 								</view>
 							</view>
+						</view>
+					</view>
+					
+					<view class="mask" v-show="show"></view>
+					<view class="popup" v-show="show">
+						<view class="popup-content">
+							<form @submit="formSubmit" @reset="formReset" enctype="multipart/form-data">
+								<view class="form">
+									<view class="form-item">
+										<view class="title w200">部门负责人</view>
+										<picker @change="reportChange" :value="report_id" :range="reportArr" range-key="name">
+											<view class="input">{{reportArr[report_id].name}}
+												<uni-icons type="arrowdown" size="12" color="#999" class="pl20"></uni-icons>
+											</view>
+										</picker>
+									</view>
+					
+									<button class="btnsubmit" @click="AddManager(item)">提交</button>
+									<view class="cancle">
+										<uni-icons type="closeempty" size="24" color="#999999" class="pl20" @tap="taphide">
+										</uni-icons>
+									</view>
+								</view>
+							</form>
 						</view>
 					</view>
 				</view>
@@ -46,7 +71,12 @@
 				}],
 				deptArr:[],
 				postArr:[],
-				postlist:[]
+				postlist:[],
+				report:0,
+				report_id:0,
+				reportArr:[],
+				dept_id:0,
+				show: false,
 			}
 		},
 		onShow(){
@@ -54,6 +84,11 @@
 		},
 		onLoad(option){
 			//this.DeptList();
+			this.axios.get('employee/get_all').then(res => {
+				this.reportArr = res.data.data
+				let reportlist = this.reportArr
+				this.report_id = (reportlist).findIndex ((reportlist) => reportlist.id  ==  this.report);
+			})
 		},
 		methods: {
 			reload() {
@@ -110,6 +145,7 @@
 					url: 'editpost?id=' + post.id,
 				})
 			},
+			
 			AddDept:function(){
 				uni.navigateTo({
 					url: 'adddept',
@@ -119,6 +155,40 @@
 				uni.navigateTo({
 					url: 'addpost',
 				})
+			},
+			tapshow: function(item) {
+				this.show = true
+				this.dept_id = item.id
+			},
+			taphide: function() {
+				this.show = false
+			},
+			AddManager:function(item){
+				this.show = true;
+				let data ={
+					id: this.dept_id,
+					user_id: this.reportArr[this.report_id].id
+				}
+				let manager = JSON.stringify(data);
+				this.axios.post('department/add_manager', manager)
+					.then(res => {
+						console.log(res)
+						if (res.data.code == 200) {
+							uni.showToast({
+								title: "添加成功!",
+								duration: 2000
+							})
+						} else {
+							uni.showModal({
+								content: res.data.message,
+								confirmText: "知道了",
+								showCancel: false
+							})
+						}
+					})
+			},
+			reportChange: function(e) {
+				this.report_id = e.detail.value
 			},
 			DelDept:function(item){
 				let data ={
@@ -157,6 +227,7 @@
 					}
 				})
 			},
+			
 			DelPost:function(post){
 				let data ={
 					id: post.id,
@@ -230,5 +301,12 @@
 	}
 	.pl40{
 		padding: 0 0 0 40rpx;
+	}
+	.w200{
+		width:200rpx !important;
+	}
+	.form-item{
+		margin: 40rpx 0 !important;
+		border: 0 !important;
 	}
 </style>

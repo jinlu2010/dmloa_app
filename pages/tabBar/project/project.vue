@@ -15,12 +15,12 @@
 			 </view>
 		</view>
 		<view class="place"></view>
-		<view class="tabbar project">
+		<view class="tabbar">
 			<view class="bgtab"></view>
 			<view class="tab-title">
 				<view @tap="createMoudle" :class="{active:btncontent == 0}">模块创建</view>
 				<view @tap="process" :class="{active:btncontent == 1}">项目进度</view>
-				<view @tap="change(2)" :class="{active:btncontent == 2}">历史项目</view>
+				<!-- <view @tap="change(2)" :class="{active:btncontent == 2}">历史项目</view> -->
 			</view>
 		</view>
 		
@@ -32,7 +32,7 @@
 				<view class="list-item-container">
 					<view class="list-item-content pr60" v-for="item in projectlist" :key="item.id">
 						<view class="project-left">
-							<text class="title">{{item.name}}</text>
+							<text class="title teamkpi">{{item.name}}</text>
 						</view>
 						<view class="list-content-right project-right">
 							<button class="btngreen" @tap="NewBigModule(item)">创建大模块</button>
@@ -45,7 +45,7 @@
 				<view class="list-item-container">
 					<view class="list-item-content pr60" v-for="item in bigmodulelist" :key="item.id">
 						<view class="project-left">
-							<text class="title">{{item.name}}</text>
+							<text class="title teamkpi">{{item.name}}</text>
 						</view>
 						<view class="list-content-right project-right">
 							<button class="btngreen" @tap="NewSmallModule(item)">创建小模块</button>
@@ -58,7 +58,7 @@
 				<view class="list-item-container">
 					<view class="list-item-content pr60" v-for="item in smallmodulelist" :key="item.id">
 						<view class="project-left">
-							<text class="title">{{item.name}}</text>
+							<text class="title teamkpi">{{item.name}}</text>
 						</view>
 						<view class="list-content-right project-right">
 							<button class="btngreen" @tap="NewWorkSheet(item)">创建工单</button>
@@ -70,11 +70,11 @@
 		
 		<!--项目进度-->
 		<view class="tab-content" :class="{tab:btncontent == 1}">
+			<view v-if="projectlist == ''">
+				<text class="none">还没有创建项目哦~</text>
+			</view>
 			<view class="list">
 				<view class="list-item-container rightlist">
-					<view v-if="projectlist == ''">
-						<text class="none">还没有创建项目哦~</text>
-					</view>
 					<view class="list-item-content" @tap="BigModuleing(item)" v-for="item in projectlist" :key="item.id">
 						<text class="title teamkpi">{{item.name}}</text>
 						<uni-icons type="arrowright" size="20" color="#CCC" class="right lh"></uni-icons>
@@ -85,7 +85,7 @@
 		</view>
 		
 		<!--历史项目-->
-		<view class="tab-content" :class="{tab:btncontent == 2}">
+		<!-- <view class="tab-content" :class="{tab:btncontent == 2}">
 			<view class="list">
 				<view class="list-item-container rightlist">
 					<view class="list-item-content" @tap="BigModuleed">
@@ -100,7 +100,7 @@
 					</view>
 				</view>
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 

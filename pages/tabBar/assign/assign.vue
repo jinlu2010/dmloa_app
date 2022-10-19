@@ -31,7 +31,7 @@
 					</view>
 					<view class="list-item-content" v-for="item in tasklist" :key="item.id">
 						<view class="list-content-left project-left">
-							<text class="title">{{item.name}}</text>
+							<text class="title teamkpi">{{item.name}}</text>
 						</view>
 						<view class="list-content-right project-right">
 							<button class="btngreen" @tap="AssignTask(item)">分配</button>
@@ -68,8 +68,14 @@
 								<text class="date grey">至{{item.end_at}}</text>
 							</view>
 							<view class="list-content-right">
+								<view v-if="item.operator_finished == '已完成' || item.operator_finished == '已终止'">
+									<button class="hidden" @tap.stop="EditTask(item)">修改</button>
+								</view>
+								<view v-if="item.operator_finished == '进行中'">
+									<button class="btngreen" @tap.stop="EditTask(item)">修改</button>
+								</view>
 								<!-- <button :class="nowdate > item.start_at ? 'hidden':'btngreen'" @tap.stop="EditTask(item)">修改</button> -->
-								<button class="btngreen" @tap.stop="EditTask(item)">修改</button>
+								
 							</view>
 						</view>
 					</view>
@@ -157,7 +163,7 @@
 				this.axios.get('task/get_all', {
 						params: {
 							'is_assigned': true,
-							'end_at':this.info.date
+							'start_at':this.info.date
 						}
 					})
 					.then(res => {
@@ -165,8 +171,10 @@
 						this.taskdetail=[] //让列表为空，否则列表会无限增加
 						for(let i =0; i< res.data.data.length; i++){//取id值
 							for(let j=0; j<res.data.data[i].task_items.length;j++){
-								if(res.data.data[i].task_items[j].is_finished==true){
+								if(res.data.data[i].task_items[j].finished==true && res.data.data[i].task_items[j].stopped == false){
 									this.finished='已完成'
+								}else if(res.data.data[i].task_items[j].finished==true && res.data.data[i].task_items[j].stopped == true){
+									this.finished='已终止'
 								}else{
 									this.finished='进行中'
 								}
@@ -260,6 +268,6 @@
 		font-size: 24rpx;
 	}
 	.hidden{
-		display: none;
+		display: none !important;
 	}
 </style>

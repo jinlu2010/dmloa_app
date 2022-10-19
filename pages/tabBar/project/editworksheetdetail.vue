@@ -74,10 +74,9 @@
 				name:'',
 				user_id: 0,
 				userArr: [{
-						id: 0,
-						name: '请选择',
-					}
-				],
+					id: 0,
+					name: '请选择',
+				}],
 				project_id:'',
 				status_id:0,
 				statusArr: [{

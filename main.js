@@ -45,7 +45,7 @@ export function createApp() {
 }); */
 
 
-let baseURL = 'http://47.100.125.167:8082/'
+let baseURL = 'http://110.40.229.45:8082/'
 axios.defaults.adapter = function(config) {
 	let token = uni.getStorageSync("token")
 	config.headers = {

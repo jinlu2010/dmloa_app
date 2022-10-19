@@ -36,13 +36,12 @@
 						<text class="title">{{item.name}}</text>
 						<text class="note">From {{item.creator.name}}</text>
 					</view>
-					<view class="list-content-right" v-if="item.task_items[0].is_finished == false">
+					<view class="list-content-right" v-if="item.task_items[0].finished == false && item.task_items[0].stopped == false">
 						<button class="btngreen" @tap.stop="tapshow(item)">进行中</button>
 					</view>
 					<view class="list-content-right">
-						<image :src="item.task_items[0].is_stoped == true ? '../../../static/image/icon06.png': item.task_items[0].is_finished == true ? '../../../static/image/icon05.png':''"></image>
+						<image :src="item.task_items[0].stopped == true ? '../../../static/image/icon06.png': item.task_items[0].finished == true ? '../../../static/image/icon05.png':''"></image>
 						<!-- <button class="btngreen" @tap.stop="tapshow(item)">进行中</button> -->
-						
 					</view>
 				</view>
 			</view>
@@ -111,8 +110,7 @@
 
 						<view class="form-item" v-show="delay">
 							<view class="title">完成时间</view>
-							<picker mode="date" :value="date" :start="startDate" :end="endDate"
-								@change="bindDateChange">
+							<picker mode="date" :value="date" :start="startDate" :end="endDate" @change="bindDateChange">
 								<view class="input">{{date}}
 									<uni-icons type="arrowdown" size="12" color="#999" class="pl20"></uni-icons>
 								</view>
@@ -199,9 +197,6 @@
 					name: '完成'
 				}, {
 					id: 1,
-					name: '改期'
-				}, {
-					id: 2,
 					name: '终止'
 				}],
 				status_id: 0,
@@ -215,7 +210,7 @@
 				time_id: 0,
 				title: 'uploadFile',
 				remark: '',
-				getData: '',
+				getDate: '',
 				imageSrc: '',
 				task_item_id: '',
 				is_finished: false,
@@ -254,8 +249,8 @@
 			this.axios.get('task/get_all', {
 				params: {
 					'is_assigned': true,
-					//'is_mine':true,
-					//'end_at':this.getDate
+					'is_mine':true,
+					'start_at':this.getDate
 				}
 			}).then(res => {
 				this.tasklist = res.data.data;
@@ -313,12 +308,12 @@
 				this.$refs.calendar.open()
 			},
 			changeDate(data) {
-				this.getData = data.ym
-				console.log('getdata:', this.getData)
+				this.getDate = data.ym
+				console.log('getdate:', this.getDate)
 				this.axios.get('task/get_all', {
 					params: {
 						'is_mine':true,
-						'end_at':this.getDate
+						'start_at':this.getDate
 					}
 				}).then(res => {
 					this.tasklist = res.data.data;
@@ -335,16 +330,10 @@
 				this.status_id = e.detail.value
 				if (this.status_id == 0) {
 					this.finish = true;
-					this.delay = false;
 					this.stop = false;
 				} else if (this.status_id == 1) {
-					this.delay = true;
 					this.finish = false;
-					this.stop = false;
-				} else {
 					this.stop = true;
-					this.finish = false;
-					this.delay = false;
 				}
 			},
 			timeChange: function(e) {
@@ -389,9 +378,13 @@
 					}).then(res => {
 						console.log(res)
 						if (res.data.code == 200) {
-							alert("已延期")
+							uni.showToast({
+								title: '已延期', 
+							    icon: 'success',
+							    duration: 1000,
+							})
 							this.show = false
-							location.reload()
+							this.reload()
 							} else {
 								uni.showModal({
 									content: res.data.message,
@@ -407,9 +400,13 @@
 					}).then(res => {
 						console.log(res)
 						if (res.data.code == 200) {
-							alert("已终止")
+							uni.showToast({
+								title: '已终止', 
+							    icon: 'success',
+							    duration: 1000,
+							})
 							this.show = false
-							location.reload()
+							this.reload()
 						} else {
 							uni.showModal({
 								content: res.data.message,
@@ -458,8 +455,7 @@
 	}
 </script>
 
-<style>
-	
+<style>	
 	page {
 		background-color: #FFFFFF;
 	}

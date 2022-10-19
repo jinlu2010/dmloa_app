@@ -7,11 +7,12 @@
 			</view>
 		</view>
 		
+		
 		<view class="tab-content" style="display: block;">
 			<view class="list project">
 				<view class="list-item-container rightlist listheight">
 					<view v-if="taskdetail == ''">
-						<text class="none">还没有创建任务哦~</text>
+						<text class="none" style="height: 110rpx;">还没有创建任务哦~</text>
 					</view>
 					<view class="list-item-content"  v-for="item in taskdetail" :key="item.id">
 						<view class="list-content-left">
@@ -26,7 +27,12 @@
 				</view>	
 			</view>
 			<view class="project-button">
-				<button class="btngreen" @tap="EditWorkSheet">编辑任务工单</button>
+				<view v-if="taskdetail.length == 0">
+					<button class="hidden" @tap="EditWorkSheet">编辑任务工单</button>
+				</view>
+				<view v-if="taskdetail.length != 0">
+					<button class="btngreen" @tap="EditWorkSheet">编辑任务工单</button>
+				</view>
 			</view>	
 		</view>
 	</view>
@@ -94,7 +100,10 @@
 </script>
 
 <style>
-page{
-	background-color: #EEEEEE;
-}
+	page{
+		background-color: #EEEEEE;
+	}
+	.hidden{
+		display: none !important;
+	}
 </style>

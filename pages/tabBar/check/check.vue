@@ -29,83 +29,29 @@
 			</view>
 			
 			<view class="team-layout">
-				<view class="team">
-					<view class="team-title">01 金鹭 运营部-平面设计师</view>
-					<view class="team-item-container" @tap="Detail">
-						<view class="team-item-content">
-							<view class="list-content-left">
-								<text class="title">入职培训</text>
-								<text class="note">From 徐会香</text>
-							</view>
-							<view class="list-content-middle">
-								<text class="note">已完成</text>
-							</view>
-							<view class="list-content-right">
-								<image src="../../../static/image/icon08.png" class="image"></image>
-							</view>
-						</view>
+				<view class="team" v-for="(item,i) in teamlist" :key="i">
+					<view class="team-title">0{{i+1}} {{item.user.name}} {{item.user.department}}-{{item.user.job}}</view>
+					<view class="team-item-container" v-if="item.tasks == ''">
+						<text class="nonetask">今天没有任务哦~</text>
 					</view>
-					<view class="team-item-container" @tap="Detail">
+					<view class="team-item-container" @tap="Detail" v-for="task in item.tasks" :key="task.id">
 						<view class="team-item-content">
 							<view class="list-content-left">
-								<text class="title">设计劳动节海报</text>
-								<text class="note">From 张小小</text>
+								<text class="title">{{task.name}}</text>
+								<text class="note">From {{task.creator.name}}</text>
 							</view>
 							<view class="list-content-middle">
-								<text class="note">已完成</text>
-								<text class="number blue">+1</text>
+								<text class="note">{{task.finished == false ? '进行中' : task.delayed == false ? '正常完成' : '延期完成'}}</text>
+								<text class="number blue">{{task.score == 0 ? '' : '+'+task.score}} 分</text>
 							</view>
-							<view class="list-content-right">
-								<button class="btngreen mr10" @tap.stop="tapshow">评分</button>
+							<view class="list-content-right" v-if="task.finished == true && task.marking == false">
+								<button class="btngreen mr10" @tap.stop="tapshow(item)">评分</button>
 							</view>
-						</view>
-					</view>
-					<view class="team-item-container" @tap="Detail">
-						<view class="team-item-content">
-							<view class="list-content-left">
-								<text class="title">花开声音LOGO设计</text>
-								<text class="note">From NO.20200215CWH</text>
-							</view>
-							<view class="list-content-middle">
-								<text class="note blue">已延期</text>
-								<text class="date blue">2020.6.30</text>
-							</view>
-							<view class="list-content-right">
-								<image src="../../../static/image/icon07.png" class="image"></image>
-							</view>
-						</view>
-					</view>
-				</view>
-
-				<view class="team">
-					<view class="team-title">02 雪梨 运营部-客服经理</view>
-					<view class="team-item-container" @tap="Detail">
-						<view class="team-item-content">
-							<view class="list-content-left">
-								<text class="title">入职培训</text>
-								<text class="note">From 徐会香</text>
-							</view>
-							<view class="list-content-middle">
-								<text class="note">已完成</text>
-								<text class="number blue">+1</text>
-							</view>
-							<view class="list-content-right">
+							<view class="list-content-right" v-if="task.marking == true && task.finished == true">
 								<image src="../../../static/image/icon05.png" class="image"></image>
 							</view>
-						</view>
-					</view>
-					<view class="team-item-container" @tap="Detail">
-						<view class="team-item-content">
-							<view class="list-content-left">
-								<text class="title">协助徐汇香等搬仓库</text>
-								<text class="note">From 张小小</text>
-							</view>
-							<view class="list-content-middle">
-								<text class="note">已完成</text>
-								<text class="number blue">+1</text>
-							</view>
-							<view class="list-content-right">
-								<button class="btnedit mr10" @tap.stop="tapshow">修改</button>
+							<view class="list-content-right" v-if="task.marking == false && task.finished == false">
+								<image src="../../../static/image/icon08.png" class="image"></image>
 							</view>
 						</view>
 					</view>
@@ -119,19 +65,20 @@
 						<view class="form pl40">
 							<view class="form-item">
 								<view class="title">任务评分</view>
-								<picker @change="bindPickerChange" :value="index" :range="array" range-key="name">
-									<view class="input">{{array[index].name}}<uni-icons type="arrowdown" size="12" color="#999" class="pl20"></uni-icons>
+								<picker @change="scoreChange" :value="score_id" :range="score" range-key="name">
+									<view class="input">{{score[score_id].name}}
+										<uni-icons type="arrowdown" size="12" color="#999" class="pl20"></uni-icons>
 									</view>
 								</picker>
 							</view>
 							<view class="form-item">
 								<view class="title">指导意见</view>
 								<view class="textarea popuptextarea">
-									<textarea @blur="bindTextAreaBlur" auto-height placeholder="请输入内容" />
+									<textarea @blur="bindTextAreaBlur" auto-height placeholder="请输入内容" v-model="remark"/>
 								</view>
 							</view>
 							
-							<button class="btngreen btnsubmit">提交</button>
+							<button class="btngreen btnsubmit" @click="FinishCheck">提交</button>
 							<view class="cancle">
 								<uni-icons type="closeempty" size="24" color="#999999" class="pl20"  @tap="taphide"></uni-icons>
 							</view>
@@ -140,98 +87,19 @@
 				</view>
 			</view>
 		</view>
+		
+		
 		<view class="tab-content" :class="{tab:btncontent == 1}">
 			<text class="mycheck-date">2020年03月</text>
 			<view class="list">
-				<view class="list-item-container" @tap="Detail">
-					<view class="list-item-content">
+				<view class="list-item-container" v-for="item in mylist" :key="item.id">
+					<view class="list-item-content pr60 pt20 listheight" @tap="Detail">
 						<view class="list-content-left">
-							<text class="title">办理入职培训</text>
-							<text class="note">03-24 From 徐会香</text>
+							<text class="title">{{item.name}}</text>
+							<text class="note">03-24 From {{item.operator.name}}</text>
 						</view>
 						<view class="list-content-right">
-							<text class="h1">+1</text>
-						</view>
-					</view>
-				</view>
-				<view class="list-item-container" @tap="Detail">
-					<view class="list-item-content">
-						<view class="list-content-left">
-							<text class="title">办理入职培训</text>
-							<text class="note">03-24 From 徐会香</text>
-						</view>
-						<view class="list-content-right">
-							<text class="h1">+1</text>
-						</view>
-					</view>
-				</view>
-				<view class="list-item-container" @tap="Detail">
-					<view class="list-item-content">
-						<view class="list-content-left">
-							<text class="title">办理入职培训</text>
-							<text class="note">03-24 From 徐会香</text>
-						</view>
-						<view class="list-content-right">
-							<text class="h1">+1</text>
-						</view>
-					</view>
-				</view>
-				<view class="list-item-container" @tap="Detail">
-					<view class="list-item-content">
-						<view class="list-content-left">
-							<text class="title">办理入职培训</text>
-							<text class="note">03-24 From 徐会香</text>
-						</view>
-						<view class="list-content-right">
-							<text class="h1">+1</text>
-						</view>
-					</view>
-				</view>
-			</view>
-			
-			<text class="mycheck-date">2020年02月</text>
-			<view class="list">
-				<view class="list-item-container" @tap="Detail">
-					<view class="list-item-content">
-						<view class="list-content-left">
-							<text class="title">办理入职培训</text>
-							<text class="note">03-24 From 徐会香</text>
-						</view>
-						<view class="list-content-right">
-							<text class="h1">+1</text>
-						</view>
-					</view>
-				</view>
-				<view class="list-item-container" @tap="Detail">
-					<view class="list-item-content">
-						<view class="list-content-left">
-							<text class="title">办理入职培训</text>
-							<text class="note">03-24 From 徐会香</text>
-						</view>
-						<view class="list-content-right">
-							<text class="h1">+1</text>
-						</view>
-					</view>
-				</view>
-				<view class="list-item-container" @tap="Detail">
-					<view class="list-item-content">
-						<view class="list-content-left">
-							<text class="title">办理入职培训</text>
-							<text class="note">03-24 From 徐会香</text>
-						</view>
-						<view class="list-content-right">
-							<text class="h1">+1</text>
-						</view>
-					</view>
-				</view>
-				<view class="list-item-container" @tap="Detail">
-					<view class="list-item-content">
-						<view class="list-content-left">
-							<text class="title">办理入职培训</text>
-							<text class="note">03-24 From 徐会香</text>
-						</view>
-						<view class="list-content-right">
-							<text class="h1">+1</text>
+							<text class="h1 lh120">+{{item.score}}</text>
 						</view>
 					</view>
 				</view>
@@ -265,9 +133,34 @@
 				dateWidth:'',
 				btncontent: 0,
 				show : false,
-				array: [{name:'未执行0分'},{name: '不满意3分'}, {name:'基本满意8分'}, {name:'非常满意10分'}],
+				score_id: 0,
+				score: [{name:'未执行0分',value:0},{name: '不满意3分',value:3}, {name:'基本满意8分',value:8}, {name:'非常满意10分',value:10}],
 				index: 2,
+				teamlist:[],
+				finished:'',
+				task_id:'',
+				remark:'',
+				mylist:[]
 			}
+		},
+		onLoad(){
+			this.axios.get('okr/get_all',{
+				params: {
+					//'start_at':this.info.date
+					//'id': this.userid
+				}
+			}).then(res => {
+				console.log(res.data.data)
+				this.teamlist = res.data.data
+			}),
+			this.axios.get('okr/my',{
+				params: {
+					//'start_at':this.info.date
+				}
+			}).then(res => {
+				this.mylist = res.data.data
+				console.log('mylist:',this.mylist)
+			})
 		},
 		methods: {
 			UserCenter: function() {
@@ -290,23 +183,56 @@
 			change(e) {
 			     this.btncontent = e;
 			},
-			bindPickerChange: function(e) {
-				console.log('picker发送选择改变，携带值为：' + e.detail.value)
-				this.index = e.detail.value
-			},
 			bindTextAreaBlur: function (e) {
 				console.log(e.detail.value)
 			},
-			tapshow:function(){
+			tapshow:function(item){
 				this.show = true
+				this.task_id= item.tasks[0].id
 			},
 			taphide:function(){
 				this.show = false
-			}
+			},
+			scoreChange: function(e) {
+				this.score_id = e.detail.value
+			},
+			FinishCheck: function() {
+				this.axios.post('okr/score', {
+					id: this.task_id,
+					remark: this.remark,
+					score: this.score[this.score_id].value,
+				}).then(res => {
+					console.log(res)
+					if (res.data.code == 200) {
+						uni.showToast({
+							title: '已完成', 
+						    icon: 'success',
+						    duration: 1000,
+						})
+						this.show = false
+					} else {
+						uni.showModal({
+							content: res.data.message,
+							confirmText: "知道了",
+							showCancel: false
+						})
+					}
+				})
+			},
 		}
 	}
 </script>
 
 <style>
+	.nonetask{
+		font-size: 28rpx;
+		text-align: center;
+		line-height: 120rpx;
+		color: #999999;
+		display: block;
+	}
+	.lh120{
+		line-height: 120rpx;
+	}
 	
 </style>

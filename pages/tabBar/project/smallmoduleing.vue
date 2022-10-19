@@ -2,8 +2,8 @@
 	<view class="newtask">
 		<view class="list">
 			<view class="list-item-container rightlist">
-				<view v-if="smallmodulelist == ''">
-					<text class="none">还没有创建小模块哦~</text>
+				<view v-if="smallmodulelist.length == 0">
+					<text class="none" style="height: 110rpx;">还没有创建小模块哦~</text>
 				</view>
 				<view class="list-item-content" @tap="WorkSheet(item)" v-for="item in smallmodulelist" :key="item.id">
 					<text class="title teamkpi">{{item.name}}</text>
@@ -13,7 +13,12 @@
 			</view>
 		</view>
 		<view class="project-button">
-			<button class="btngreen" @tap="EditSmallModule">编辑项目小模块</button>
+			<view v-if="smallmodulelist.length == 0">
+				<button class="hidden" @tap="EditSmallModule">编辑项目小模块</button>
+			</view>
+			<view v-if="bigmodulelist.length != 0">
+				<button class="btngreen" @tap="EditSmallModule">编辑项目小模块</button>
+			</view>
 		</view>
 	</view>
 </template>
@@ -73,7 +78,10 @@
 </script>
 
 <style>
-page{
-	background-color: #EEEEEE;
-}
+	page{
+		background-color: #EEEEEE;
+	}
+	.hidden{
+		display: none !important;
+	}
 </style>

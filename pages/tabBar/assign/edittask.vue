@@ -86,7 +86,8 @@
 				</view>
 			</view>
 			<button class="btngreen btnform" @click="addTask()">保存</button>
-			<button class="btngreen btnform" @click="delTask()">删除</button>
+			<button class="btnblue border100 mr60 mb20" @click="stopTask()">终止</button>
+			<button class="btngrey border100 mr60" @click="delTask()">删除</button>
 		</form>
 	</view>
 </template>
@@ -165,6 +166,8 @@
 				this.executorArr = res.data.data
 				console.log('执行人：',this.executorArr)
 			})
+			
+			
 				
 			this.axios.get('task/get', {
 				params: {
@@ -180,6 +183,12 @@
 				this.remark=res.data.data.remark,
 				this.start_at=res.data.data.start_at,
 				this.end_at=res.data.data.end_at,
+				
+				this.axios.get('project/get_all').then(res => {
+					this.projectArr = res.data.data
+					let projectlist = this.projectArr
+					this.project_id = (projectlist).findIndex ((projectlist) => projectlist.id  ==  this.project );
+				})
 				this.axios.get('module/get_all',{
 					params: {
 						'level_id': 1,
@@ -202,13 +211,6 @@
 				}
 			})
 			
-			
-			this.axios.get('project/get_all').then(res => {
-				this.projectArr = res.data.data
-				let projectlist = this.projectArr
-				this.project_id = (projectlist).findIndex ((projectlist) => projectlist.id  ==  this.project );
-			})
-
 		},
 		methods: {
 			addTask: function() {
@@ -218,7 +220,7 @@
 					this.is_assigned = true
 				}
 				let data = {
-					id:this.task_id,
+					id: this.task_id,
 					operator_user_ids: this.user_ids,
 					start_at: this.start_at,
 					name: this.name,
@@ -261,6 +263,30 @@
 							})
 						}
 					})
+			},
+			stopTask:function(){
+				this.axios.post('task/stop',{
+					id: this.task_id,
+					is_sub_task:false
+				}).then(res => {
+					console.log(res)
+					if (res.data.code == 200) {
+						uni.showToast({
+							title: '已终止', 
+						    icon: 'success',
+						    duration: 1000,
+						})
+						uni.navigateBack({
+							delta: 1,
+						});
+					} else {
+						uni.showModal({
+							content: res.data.message,
+							confirmText: "知道了",
+							showCancel: false
+						})
+					}
+				})
 			},
 			delTask: function() {
 				let that = this
@@ -339,18 +365,7 @@
 					})
 				})
 			},
-			// moduleList: function(e) {
-			// 	console.log('project_id:',this.projectArr[this.project_id].id)
-			// 	this.axios.get('module/get_all',{
-			// 		params: {
-			// 			'level_id': 1,
-			// 			'project_id':this.projectArr[this.project_id].id
-			// 		}
-			// 	}).then(res => {
-			// 		this.moduleArr = res.data.data
-			// 		console.log('module:',this.moduleArr)
-			// 	})
-			// },
+
 			projectArrChange: function(e) {
 				this.project_id = e.detail.value
 				this.axios.get('module/get_all',{

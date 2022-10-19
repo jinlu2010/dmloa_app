@@ -1,10 +1,10 @@
 <template>
-	<view class="newtask">
+	<view class="newtask">		
 		<view class="list">
+			<view v-if="bigmodulelist.length == 0">
+				<text class="none" style="height: 110rpx;">还没有创建大模块哦~</text>
+			</view>
 			<view class="list-item-container rightlist">
-				<view v-if="bigmodulelist == ''">
-					<text class="none">还没有创建大模块哦~</text>
-				</view>
 				<view class="list-item-content"  @tap="SmallModule(item)" v-for="item in bigmodulelist" :key="item.id">
 					<text class="title teamkpi">{{item.name}}</text>
 					<uni-icons type="arrowright" size="20" color="#CCC" class="right lh"></uni-icons>
@@ -12,10 +12,19 @@
 				</view>
 			</view>
 		</view>
+		
+		
 		<view class="project-button">
-			<button @tap="EditBigModule" class="btngreen">编辑项目大模块</button>
-			<button @tap="EditProject" class="btngreen">编辑项目详情</button>
-			<button @tap="ProjectDetail" class="btngreen">查看项目详情</button>
+			<view v-if="bigmodulelist.length == 0">
+				<button @tap="EditBigModule" class="hidden">编辑项目大模块</button>
+				<button @tap="EditProject" class="btngreen">编辑项目详情</button>
+				<button @tap="ProjectDetail" class="btngreen">查看项目详情</button>
+			</view>
+			<view v-if="bigmodulelist.length != 0">
+				<button @tap="EditBigModule" class="btngreen">编辑项目大模块</button>
+				<button @tap="EditProject" class="btngreen">编辑项目详情</button>
+				<button @tap="ProjectDetail" class="btngreen">查看项目详情</button>
+			</view>
 			<!-- <button class="btngreen">查看项目进度表</button> -->
 		</view>
 	</view>
@@ -32,11 +41,14 @@
 		},
 		onShow() {
 			this.BigModuleList();
+			console.log(this.bigmodulelist.length)
 		},
 		onLoad(option){
 			const item = JSON.parse(decodeURIComponent(option.item))
 			this.project_id = item.id
 			this.project_name = item.name
+			this.BigModuleList();
+
 		},
 		methods: {
 			BigModuleList:function(){
@@ -85,7 +97,10 @@
 </script>
 
 <style>
-page{
-	background-color: #EEEEEE;
-}
+	page{
+		background-color: #EEEEEE;
+	}
+	.hidden{
+		display: none !important;
+	}
 </style>
