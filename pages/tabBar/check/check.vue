@@ -42,7 +42,7 @@
 							</view>
 							<view class="list-content-middle">
 								<text class="note">{{task.finished == false ? '进行中' : task.delayed == false ? '正常完成' : '延期完成'}}</text>
-								<text class="number blue">{{task.score == 0 ? '' : '+'+task.score}} 分</text>
+								<text class="number blue">{{task.score == 0 ? '' : '+'+task.score+'分'}}</text>
 							</view>
 							<view class="list-content-right" v-if="task.finished == true && task.marking == false">
 								<button class="btngreen mr10" @tap.stop="tapshow(item)">评分</button>
@@ -90,13 +90,13 @@
 		
 		
 		<view class="tab-content" :class="{tab:btncontent == 1}">
-			<text class="mycheck-date">2020年03月</text>
+			<!-- <text class="mycheck-date">2020年03月</text> -->
 			<view class="list">
 				<view class="list-item-container" v-for="item in mylist" :key="item.id">
 					<view class="list-item-content pr60 pt20 listheight" @tap="Detail">
 						<view class="list-content-left">
 							<text class="title">{{item.name}}</text>
-							<text class="note">03-24 From {{item.operator.name}}</text>
+							<text class="note">{{item.marking_at}} From {{item.operator.name}}</text>
 						</view>
 						<view class="list-content-right">
 							<text class="h1 lh120">+{{item.score}}</text>

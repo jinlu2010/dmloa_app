@@ -56,35 +56,35 @@
 		},
 		onLoad(option){
 			this.userid = option.id
-			this.axios.get('profile/get').then(res => {
-				this.username = res.data.data.name;
-				this.userid = res.data.data.id
-				console.log(res.data.data)
-				this.axios.get('employee/get',{
+			// this.axios.get('profile/get').then(res => {
+			// 	this.username = res.data.data.name;
+			// 	this.userid = res.data.data.id
+			// 	console.log(res.data.data)
+				
+			// })
+			this.axios.get('employee/get',{
+				params: {
+					'id': this.userid
+				}
+			}).then(res => {
+				this.dept_id = res.data.data.departmentId,
+				this.post_id = res.data.data.jobId,
+				this.phone = res.data.data.account,
+				this.axios.get('job/get',{
 					params: {
-						'id': this.userid
+						'id': this.post_id
 					}
 				}).then(res => {
-					this.dept_id = res.data.data.departmentId,
-					this.post_id = res.data.data.jobId,
-					this.phone = res.data.data.account,
-					this.axios.get('job/get',{
-						params: {
-							'id': this.post_id
-						}
-					}).then(res => {
-						this.postname=res.data.data.name
-					})
-					this.axios.get('department/get',{
-						params: {
-							'id': this.dept_id
-						}
-					}).then(res => {
-						this.deptname = res.data.data.name
-					})
+					this.postname=res.data.data.name
+				})
+				this.axios.get('department/get',{
+					params: {
+						'id': this.dept_id
+					}
+				}).then(res => {
+					this.deptname = res.data.data.name
 				})
 			})
-			
 			
 		},
 		methods: {

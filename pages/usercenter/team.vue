@@ -1,17 +1,10 @@
 <template>
 	<view class="newtask">
 		<view class="list">
-			<view class="list-item-container rightlist" @tap="TeamKPI">
-				<view class="list-item-content">
-					<text class="title teamkpi">金鹭</text>
-					<text class="note">平面设计师</text>
-					<uni-icons type="arrowright" size="24" color="#CCC" class="right"></uni-icons>
-				</view>
-			</view>
-			<view class="list-item-container rightlist" @tap="SmallModule">
-				<view class="list-item-content">
-					<text class="title teamkpi">印雪梅</text>
-					<text class="note">客户经理</text>
+			<view class="list-item-container rightlist">
+				<view class="list-item-content" v-for="item in teamlist" :key="item.id" @tap="MyKPI(item)">
+					<text class="title teamkpi">{{item.user.name}}</text>
+					<text class="note">{{item.user.job}}</text>
 					<uni-icons type="arrowright" size="24" color="#CCC" class="right"></uni-icons>
 				</view>
 			</view>
@@ -23,13 +16,24 @@
 	export default {
 		data() {
 			return {
-				
+				teamlist:[],
 			}
 		},
+		onLoad() {
+			this.axios.get('okr/get_all').then(res => {
+				console.log(res.data.data)
+				this.teamlist = res.data.data
+			})
+		},
 		methods: {
-			TeamKPI:function(){
+			MyKPI:function(item){
+				var data ={
+					'userid':item.user.userid,
+					'username':item.user.username,
+					'postname':item.user.postname
+				}
 				uni.navigateTo({
-					url: 'teamkpi',
+					url: 'mykpi?item='+ encodeURIComponent(JSON.stringify(data))
 				})
 			}
 		}
@@ -37,7 +41,11 @@
 </script>
 
 <style>
-page{
-	background-color: #EEEEEE;
-}
+	page{
+		background-color: #EEEEEE;
+	}
+	uni-icons{
+		line-height: 110rpx !important;
+		height: 110rpx !important;
+	}
 </style>

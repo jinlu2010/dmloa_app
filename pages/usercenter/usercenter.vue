@@ -171,8 +171,13 @@
 				})
 			},
 			MyKPI:function(){
+				var data ={
+					'userid':this.userid,
+					'username':this.username,
+					'postname':this.postname
+				}
 				uni.navigateTo({
-					url: 'mykpi',
+					url: 'mykpi?item='+ encodeURIComponent(JSON.stringify(data))
 				})
 			},
 			Team:function(){
