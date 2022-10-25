@@ -160,6 +160,15 @@
 			}).then(res => {
 				this.mylist = res.data.data
 				console.log('mylist:',this.mylist)
+				// this.mylist=[] //让列表为空，否则列表会无限增加
+				// for(let i =0; i< res.data.data.length; i++){//取id值
+				// 	this.mylist.push({
+				// 		name:res.data.data[i].name,
+				// 		markingAt:res.data.data[i].marking_at,
+				// 		operatorName:res.data.data[i].operator.name,
+				// 		score:res.data.data[i].score
+				// 	})
+				// }
 			})
 		},
 		methods: {

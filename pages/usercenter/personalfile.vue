@@ -5,10 +5,10 @@
 				<view class="title">姓名</view>
 				<view class="input">{{username}}</view>
 			</view>
-			<view class="form-item">
+			<!-- <view class="form-item">
 				<view class="title">员工编号</view>
 				<view class="input">{{staffNo}}</view>
-			</view>
+			</view> -->
 			<view class="form-item">
 				<view class="title">部门</view>
 				<view class="input">{{deptname}}</view>
@@ -56,34 +56,19 @@
 		},
 		onLoad(option){
 			this.userid = option.id
-			// this.axios.get('profile/get').then(res => {
-			// 	this.username = res.data.data.name;
-			// 	this.userid = res.data.data.id
-			// 	console.log(res.data.data)
-				
-			// })
 			this.axios.get('employee/get',{
 				params: {
 					'id': this.userid
 				}
 			}).then(res => {
-				this.dept_id = res.data.data.departmentId,
-				this.post_id = res.data.data.jobId,
+				console.log(res.data.data)
 				this.phone = res.data.data.account,
-				this.axios.get('job/get',{
-					params: {
-						'id': this.post_id
-					}
-				}).then(res => {
-					this.postname=res.data.data.name
-				})
-				this.axios.get('department/get',{
-					params: {
-						'id': this.dept_id
-					}
-				}).then(res => {
-					this.deptname = res.data.data.name
-				})
+				this.username = res.data.data.name,
+				this.deptname = res.data.data.department.name,
+				this.postname = res.data.data.job.name,
+				this.email = res.data.data.email,
+				this.skill = res.data.data.jobSkill,
+				this.outskill = res.data.data.skill
 			})
 			
 		},
