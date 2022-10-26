@@ -17,8 +17,8 @@
 		<view class="tabbar">
 			<view class="bgtab"></view>
 			<view class="tab-title">
-				<view @tap="change(0)" :class="{active:btncontent == 0}">团队绩效</view>
-				<view @tap="change(1)" :class="{active:btncontent == 1}">我的绩效</view>
+				<view @tap="teamList" :class="{active:btncontent == 0}">团队绩效</view>
+				<view @tap="myList" :class="{active:btncontent == 1}">我的绩效</view>
 			</view>
 		</view>
 		
@@ -42,7 +42,7 @@
 							</view>
 							<view class="list-content-middle">
 								<text class="note">{{task.finished == false ? '进行中' : task.delayed == false ? '正常完成' : '延期完成'}}</text>
-								<text class="number blue">{{task.score == 0 ? '' : '+'+task.score+'分'}}</text>
+								<text class="number blue">{{task.score == 0 ? '' : '+'+task.score+' 分'}}</text>
 							</view>
 							<view class="list-content-right" v-if="task.finished == true && task.marking == false">
 								<button class="btngreen mr10" @tap.stop="tapshow(item)">评分</button>
@@ -96,7 +96,7 @@
 					<view class="list-item-content pr60 pt20 listheight" @tap="Detail">
 						<view class="list-content-left">
 							<text class="title">{{item.name}}</text>
-							<text class="note">{{item.marking_at}} From {{item.operator.name}}</text>
+							<text class="note">{{item.marking_at.slice(5,10)}} From {{item.operator.name}}</text>
 						</view>
 						<view class="list-content-right">
 							<text class="h1 lh120">+{{item.score}}</text>
@@ -143,35 +143,43 @@
 				mylist:[]
 			}
 		},
+		onShow() {
+			this.teamList()
+		},
 		onLoad(){
-			this.axios.get('okr/get_all',{
-				params: {
-					//'start_at':this.info.date
-					//'id': this.userid
-				}
-			}).then(res => {
-				console.log(res.data.data)
-				this.teamlist = res.data.data
-			}),
-			this.axios.get('okr/my',{
-				params: {
-					//'start_at':this.info.date
-				}
-			}).then(res => {
-				this.mylist = res.data.data
-				console.log('mylist:',this.mylist)
-				// this.mylist=[] //让列表为空，否则列表会无限增加
-				// for(let i =0; i< res.data.data.length; i++){//取id值
-				// 	this.mylist.push({
-				// 		name:res.data.data[i].name,
-				// 		markingAt:res.data.data[i].marking_at,
-				// 		operatorName:res.data.data[i].operator.name,
-				// 		score:res.data.data[i].score
-				// 	})
-				// }
-			})
+
 		},
 		methods: {
+			reload() {
+				const pages = getCurrentPages()
+				const curPage = pages[pages.length - 1]
+				curPage.onLoad(curPage.options) // 传入参数
+				curPage.onShow()
+				curPage.onReady()
+			},
+			teamList(){
+				this.btncontent = 0;
+				this.axios.get('okr/get_all',{
+					params: {
+						'start_at':this.info.date
+						//'id': this.userid
+					}
+				}).then(res => {
+					console.log(res.data.data)
+					this.teamlist = res.data.data
+				})
+			},
+			myList(){
+				this.btncontent = 1;
+				this.axios.get('okr/my',{
+					params: {
+						//'start_at':this.info.date
+					}
+				}).then(res => {
+					this.mylist = res.data.data
+					console.log('mylist:',this.mylist)
+				})
+			},
 			UserCenter: function() {
 				uni.navigateTo({
 					url: '../../usercenter/usercenter',
@@ -188,9 +196,7 @@
 			confirm(e) {
 				var choosetime=e.fulldate;
 				this.info.date=choosetime;
-			},
-			change(e) {
-			     this.btncontent = e;
+				this.teamList();
 			},
 			bindTextAreaBlur: function (e) {
 				console.log(e.detail.value)

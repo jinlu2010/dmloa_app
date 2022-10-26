@@ -2,7 +2,7 @@
 	<view class="newtask">
 		<view class="list">
 			<view class="list-item-container rightlist">
-				<view class="list-item-content" @tap="MyKPI(item)" v-for="item in teamlist" :key="item.id">
+				<view class="list-item-content" @tap="MyKPI(item)" v-for="item in teamlist" :key="item.user.id">
 					<text class="title teamkpi">{{item.user.name}}</text>
 					<text class="note">{{item.user.job}}</text>
 					<uni-icons type="arrowright" size="24" color="#CCC" class="right"></uni-icons>
@@ -31,15 +31,15 @@
 		methods: {
 			MyKPI:function(item){
 				console.log(item)
-				// var data ={
-				// 	'userid':item.user.id,
-				// 	'username':item.user.name,
-				// 	'postname':item.user.job
-				// }
-				// console.log(data)
-				// uni.navigateTo({
-				// 	url: 'mykpi?item='+ encodeURIComponent(JSON.stringify(data))
-				// })
+				var data ={
+					'userid':item.user.id,
+					'username':item.user.name,
+					'postname':item.user.job
+				}
+				console.log(data)
+				uni.navigateTo({
+					url: 'mykpi?item='+ encodeURIComponent(JSON.stringify(data))
+				})
 			}
 		}
 	}

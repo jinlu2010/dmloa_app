@@ -223,6 +223,9 @@
 				number:0
 			}
 		},
+		onShow() {
+			this.taskList()
+		},
 		onUnload() {
 			this.imageSrc = '';
 		},
@@ -246,16 +249,6 @@
 					console.log(err)
 				}
 			}) */
-			this.axios.get('task/get_all', {
-				params: {
-					'is_assigned': true,
-					'is_mine':true,
-					'start_at':this.getDate
-				}
-			}).then(res => {
-				this.tasklist = res.data.data;
-				console.log(this.tasklist)
-			})
 		},
 		methods: {
 			reload() {
@@ -264,6 +257,18 @@
 				curPage.onLoad(curPage.options) // 传入参数
 				curPage.onShow()
 				curPage.onReady()
+			},
+			taskList(){
+				this.axios.get('task/get_all', {
+					params: {
+						//'is_assigned': true,
+						'is_mine':true,
+						'start_at':this.getDate
+					}
+				}).then(res => {
+					this.tasklist = res.data.data;
+					console.log(this.tasklist)
+				})
 			},
 			
 			delFile(e){
@@ -310,15 +315,7 @@
 			changeDate(data) {
 				this.getDate = data.ym
 				console.log('getdate:', this.getDate)
-				this.axios.get('task/get_all', {
-					params: {
-						'is_mine':true,
-						'start_at':this.getDate
-					}
-				}).then(res => {
-					this.tasklist = res.data.data;
-					console.log(this.tasklist)
-				})
+				this.taskList();
 			},
 			
 			confirm(e) {
