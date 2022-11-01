@@ -161,8 +161,8 @@
 				this.btncontent = 0;
 				this.axios.get('okr/get_all',{
 					params: {
-						'start_at':this.info.date
-						//'id': this.userid
+						'start_at':this.info.date,
+						'id': this.userid
 					}
 				}).then(res => {
 					console.log(res.data.data)

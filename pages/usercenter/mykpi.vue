@@ -9,7 +9,7 @@
 					<view>评级</view>
 				</view>
 				<view class="mykpi-table-row" v-for="item in mykpiList" :key="item.id">
-					<view>{{item.date.slice(0,4)+'年'+item.date.slice(4,6)+'月'}}</view>
+					<view>{{item.date.slice(0,4)+'年'+item.date.slice(4,7)+'月'}}</view>
 					<view>{{item.score+'分'}}</view>
 					<view>{{item.level}}</view>
 				</view>
