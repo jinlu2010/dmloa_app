@@ -77,6 +77,7 @@
 				var data ={
 					'id':item.id,
 					'mid':this.module_id,
+					'pid':this.project_id
 				}
 				uni.navigateTo({
 					url: 'editworksheetdetail?item='+ encodeURIComponent(JSON.stringify(data))

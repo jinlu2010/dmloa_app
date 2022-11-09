@@ -16,13 +16,13 @@
 				</view>
 				<view class="form-item">
 					<view class="title">日期</view>
-					<picker mode="date" :value="start_at" :start="startDate" :end="endDate" @change="bindDateChange1">
+					<picker mode="date" :value="start_at" :start="startDate" :end="endDate" @change="startDateChange">
 						<view class="input">{{start_at}}
 							<uni-icons type="arrowdown" size="12" color="#999" class="pl20"></uni-icons>
 							<text>至</text>
 						</view>
 					</picker>
-					<picker mode="date" :value="end_at" :start="startDate" :end="endDate" @change="bindDateChange2">
+					<picker mode="date" :value="end_at" :start="startDate" :end="endDate" @change="endDateChange">
 						<view class="input">{{end_at}}
 							<uni-icons type="arrowdown" size="12" color="#999" class="pl20"></uni-icons>
 						</view>
@@ -148,6 +148,12 @@
 			userArrChange: function(e) {
 				this.user_id = e.detail.value
 			},
+			startDateChange: function(e) {
+				this.start_at = e.target.value
+			},
+			endDateChange: function(e) {
+				this.end_at = e.target.value;
+			}
 		}
 	}
 </script>

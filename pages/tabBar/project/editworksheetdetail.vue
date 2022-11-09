@@ -97,6 +97,7 @@
 			const item = JSON.parse(decodeURIComponent(option.item))
 			this.task_id = item.id
 			this.module_id = item.mid
+			this.project_id = item.pid
 			this.axios.get('task/get', {
 				params: {
 					'id': this.task_id,
@@ -105,7 +106,7 @@
 				console.log('tasklist:',res.data.data)
 				this.name = res.data.data.name,
 				//this.user_id=res.data.data.director.id,
-				//this.start_at=res.data.data.start_at,
+				this.start_at=res.data.data.start_at,
 				this.end_at=res.data.data.end_at,
 				this.status_id=res.data.data.status_id
 				//this.project_id=res.data.data.project.id
@@ -124,13 +125,12 @@
 		methods: {
 			addTask: function() {
 				let data = {
-					//operator_user_ids: this.userArr[this.index].id,
 					operator_user_ids: this.user_ids,
 					id:this.task_id,
-					//start_at: this.start_at,
+					start_at: this.start_at,
 					name: this.name,
 					statusId: this.status_id,
-					//project_id: this.projectArr[this.project_id].project.id,
+					project_id: this.project_id,
 					itself: false,
 					end_at: this.end_at,
 					//remark: this.remark,

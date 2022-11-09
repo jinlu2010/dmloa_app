@@ -166,9 +166,7 @@
 				this.executorArr = res.data.data
 				console.log('执行人：',this.executorArr)
 			})
-			
-			
-				
+
 			this.axios.get('task/get', {
 				params: {
 					'id': this.task_id
@@ -305,7 +303,7 @@
 										icon: 'success',
 									})
 									setTimeout(function() {
-										that.reload()
+										//that.reload()
 									}, 1000)
 								} else {
 									uni.showModal({
