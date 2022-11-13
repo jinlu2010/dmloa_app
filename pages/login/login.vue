@@ -50,9 +50,15 @@
 						console.log(res)
 						if (res.data.data.is_need_phone == false) {
 							uni.setStorageSync('token', res.data.data.token);
-							uni.switchTab({
-								url: '../tabBar/task/task'
+							uni.showToast({
+								title: "登录成功!",
+								duration: 2000
 							})
+							setTimeout(function() {
+								uni.switchTab({
+									url: '../tabBar/task/task'
+								})
+							}, 2000)
 						} else {
 							uni.setStorageSync('token', res.data.data.token);
 							uni.navigateTo({
