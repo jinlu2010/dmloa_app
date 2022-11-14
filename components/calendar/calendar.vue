@@ -1,7 +1,7 @@
 <template>
 	<view class="cal">
 		<view class="cal-top">
-			<text ref="t1">{{ nowSelectDateString}}</text>
+			<text ref="t1">{{nowSelectDateString}}</text>
 		</view>
 
 		<view class="cal-content">
