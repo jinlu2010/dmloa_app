@@ -24,7 +24,7 @@
 			<view class="form-item">
 				<view class="title">执行人</view>
 				<view class="input">
-					<text v-for="item in executor" :key="index" class="executor">{{item}}</text>
+					<text v-for="item in executor" :key="index" class="executor">{{item + '  '}}</text>
 				</view>
 			</view>
 			<view class="form-item">

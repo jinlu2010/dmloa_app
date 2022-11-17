@@ -92,7 +92,7 @@
 		width: 30%;
 		display: block;
 		font-size:28rpx;
-		line-height:90rpx;
+		line-height:96rpx;
 		float: left;
 	}
 </style>

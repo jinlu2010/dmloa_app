@@ -263,7 +263,7 @@
 					params: {
 						//'is_assigned': true,
 						'is_mine':true,
-						'start_at':this.getDate
+						'start_at':this.date
 					}
 				}).then(res => {
 					this.tasklist = res.data.data;
@@ -281,7 +281,7 @@
 				this.filePathsList=e.tempFilePaths
 				for(let i=0;i<e.tempFilePaths.length;i++){
 					uni.uploadFile({
-						url: 'http://47.100.125.167:8082/api/upload',
+						url: 'http://110.40.229.45:8082/api/upload',
 						header: {
 							'token': token,
 						},
@@ -313,8 +313,8 @@
 				this.$refs.calendar.open()
 			},
 			changeDate(data) {
-				this.getDate = data.ym
-				console.log('getdate:', this.getDate)
+				this.date = data.ym
+				console.log('date:', this.date)
 				this.taskList();
 			},
 			

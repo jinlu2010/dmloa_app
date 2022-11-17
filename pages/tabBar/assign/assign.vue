@@ -57,7 +57,7 @@
 						<view v-if="taskdetail == ''">
 							<text class="none">今日没有分配过的任务哦~</text>
 						</view>
-						<view class="list-item-content pr60 listheight" v-for="item in taskdetail" :key="item.id" @tap="Detail">
+						<view class="list-item-content pr60 listheight" v-for="item in taskdetail" :key="item.id" @tap="Detail(item)">
 							<view class="list-content-left">
 								<text class="title">{{item.name}}</text>
 								<view class="operator">To<text class="pl20">{{item.operator}}</text>
@@ -253,9 +253,9 @@
 					url: 'edittask?id=' + item.id,
 				})
 			},
-			Detail: function() {
+			Detail: function(item) {
 				uni.navigateTo({
-					url: '../../detail/detail02',
+					url: '../task/detail?id=' + item.id,
 				})
 			}
 		}

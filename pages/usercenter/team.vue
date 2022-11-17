@@ -50,7 +50,7 @@
 		background-color: #EEEEEE;
 	}
 	uni-icons{
-		line-height: 110rpx !important;
-		height: 110rpx !important;
+		line-height: 108rpx !important;
+		height: 90rpx !important;
 	}
 </style>
