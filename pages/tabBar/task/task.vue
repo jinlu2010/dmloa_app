@@ -185,7 +185,7 @@
 				date: getDate({
 					format: true
 				}),
-				
+
 				startDate: getDate('start'),
 				endDate: getDate('end'),
 				show: false,
@@ -210,7 +210,7 @@
 				time_id: 0,
 				title: 'uploadFile',
 				remark: '',
-				getDate: '',
+				day: '',
 				imageSrc: '',
 				task_item_id: '',
 				is_finished: false,
@@ -228,6 +228,7 @@
 		},
 		onUnload() {
 			this.imageSrc = '';
+			this.filePathsList = '';
 		},
 		onLoad() {
 			//let token = uni.getStorageSync('token')
@@ -312,8 +313,13 @@
 			open() {
 				this.$refs.calendar.open()
 			},
+<<<<<<< HEAD
 			changeDate(data) {
 				this.date = data.ym
+=======
+			changeDate(date) {
+				this.date = date.ym
+>>>>>>> 184d918ddffd13348075a44023bf041a9be86a29
 				console.log('date:', this.date)
 				this.taskList();
 			},
