@@ -6,7 +6,7 @@
 					<view class="title">任务标题</view>
 					<input placeholder="请输入任务内容" class="input" v-model="name" />
 				</view>
-				<view class="form-item">
+				<!-- <view class="form-item">
 					<view class="title">开始时间</view>
 					<picker mode="date" :value="start_at" :start="startDate" :end="endDate" @change="startDateChange">
 						<view class="input">{{start_at}}
@@ -21,8 +21,15 @@
 							<uni-icons type="arrowdown" size="12" color="#999" class="pl20"></uni-icons>
 						</view>
 					</picker>
+				</view> -->
+				
+				<view class="form-item">
+					<view class="title">任务周期</view>
+					<view style="width: 280px;">
+						<uni-datetime-picker v-model="range" type="daterange" @maskClick="maskClick" :border="false" :clearIcon="false"/>
+					</view>
 				</view>
-
+				
 				<view class="form-item">
 					<view class="title">所属项目</view>
 					<picker @change="projectArrChange" :value="project_id" :range="projectArr" range-key="name">
@@ -157,20 +164,16 @@
 						name: '',
 					}
 				],
-				checkboxItems02: [{
-						name: 'xuhuixiang',
-						value: '徐会香',
-					},
-					{
-						name: 'miaochong',
-						value: '苗冲',
-					},
-					{
-						name: 'zhangyuanfang',
-						value: '张远方',
-					}
-				],
+				
+				range: [],
+
 			}
+		},
+		watch: {
+			range(newval) {
+				this.start_at = this.range[0]
+				this.end_at = this.range[1]
+			},
 		},
 		created() {
 			console.log(this.projectArr.length)
@@ -184,6 +187,9 @@
 			this.projectList()
 		},
 		methods: {
+			maskClick(e){
+				console.log('maskClick事件:', e);
+			},
 			addTask: function() {
 				if(this.user_type === ''){
 					this.is_assigned = false

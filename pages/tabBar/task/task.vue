@@ -11,7 +11,7 @@
 						<uni-icons type="contact" size="32" color="white" @tap="UserCenter"></uni-icons>
 						<!-- <button class="calendar-button" type="button" @tap="open">{{info.date}}</button>
 						<uni-calendar ref="calendar" :selected="info.selected" :showMonth="false" :date="info.date"
-							:insert="false" :lunar="false" :range="false" @confirm="confirm" />-->
+							:insert="false" :lunar="false" :range="false" @confirm="confirm" /> -->
 					</view>
 				</view>
 			</view>
@@ -34,14 +34,17 @@
 							<view class="full"></view>
 						</view> -->
 						<text class="title">{{item.name}}</text>
-						<text class="note">From {{item.creator.name}}</text>
+						<text class="note">From {{item.creator.name}} getGraceDateBeforeNow(item.end_at)</text>
 					</view>
-					<view class="list-content-right" v-if="item.task_items[0].finished == false && item.task_items[0].stopped == false">
+					<!-- <view class="list-content-right" v-if="item.task_items[this.taskItemId].finished == false && item.task_items[this.taskItemId].stopped == false">
 						<button class="btngreen" @tap.stop="tapshow(item)">进行中</button>
 					</view>
 					<view class="list-content-right">
-						<image :src="item.task_items[0].stopped == true ? '../../../static/image/icon06.png': item.task_items[0].finished == true ? '../../../static/image/icon05.png':''"></image>
-						<!-- <button class="btngreen" @tap.stop="tapshow(item)">进行中</button> -->
+						<image :src="item.task_items[this.taskItemId].stopped == true ? '../../../static/image/icon06.png': item.task_items[this.taskItemId].finished == true ? '../../../static/image/icon05.png':''"></image>
+					</view> -->
+					<view class="list-content-right" v-for="items in item.task_items" :key="items.id">
+						<button class="btngreen" v-show="items.operator.id != userid ? false : items.finished == false && items.stopped == false ? true : false" @tap.stop="tapshow(items)">进行中</button>
+						<image :src="items.stopped == true ? '../../../static/image/icon06.png': items.finished == true ? '../../../static/image/icon05.png':''" v-show="items.operator.id != userid ? false : items.finished == false && items.stopped == false ? false : true"></image>
 					</view>
 				</view>
 			</view>
@@ -143,6 +146,51 @@
 	import uniList from '@/components/uni-list/uni-list.vue'
 	import calendar from '@/components/calendar/calendar.vue'
 
+	function getDateBeforeNow(stringTime) {
+		console.log("传参未格式化", stringTime);
+		stringTime = new Date(stringTime.replace(/-/g, '/'))
+	
+		// 统一单位换算
+		var minute = 1000 * 60;
+		var hour = minute * 60;
+		var day = hour * 24;
+		var week = day * 7;
+		var month = day * 30;
+		var year = month * 12;
+	
+		var time1 = new Date().getTime(); //当前的时间戳
+		console.log("当前时间", time1);
+	
+		// 对时间进行毫秒单位转换
+		var time2 = new Date(stringTime).getTime(); //指定时间的时间戳
+	
+		console.log("传过来的时间", time2);
+	
+		var time = time1 - time2;
+		console.log("计算后的时间", time);
+	
+		var result = null;
+		if (time < 0) {
+		// alert("设置的时间不能早于当前时间！");
+			result = stringTime;
+		} else if (time / year >= 1) {
+			result = parseInt(time / year) + "年前";
+		} else if (time / month >= 1) {
+			result = parseInt(time / month) + "月前";
+		} else if (time / week >= 1) {
+			result = parseInt(time / week) + "周前";
+		} else if (time / day >= 1) {
+			result = parseInt(time / day) + "天前";
+		} else if (time / hour >= 1) {
+			result = parseInt(time / hour) + "小时前";
+		} else if (time / minute >= 1) {
+			result = parseInt(time / minute) + "分钟前";
+		} else {
+			result = "刚刚";
+		}
+		console.log("格式化后的时间", result);
+		return result;
+	}
 
 	function getDate(type) {
 		const date = new Date();
@@ -168,6 +216,7 @@
 			uniList,
 			calendar
 		},
+		
 		data() {
 			return {
 				tasklist: [],
@@ -182,6 +231,10 @@
 				windowHeight: 0,
 				dateWidth: '',
 				dateHeight: '',
+				
+				getDateBeforeNow:getDateBeforeNow('2020-09-10 20:20:20'),
+				
+				
 				date: getDate({
 					format: true
 				}),
@@ -220,7 +273,12 @@
 				upload_id:'',
 				
 				filePathsList:[],
-				number:0
+				number:0,
+				userid:'',
+				taskItemArr:[],
+				taskItemId:0,
+				true:true,
+				false:false
 			}
 		},
 		onShow() {
@@ -231,6 +289,12 @@
 			this.filePathsList = '';
 		},
 		onLoad() {
+			this.axios.get('profile/get').then(res => {
+				this.userid = res.data.data.id;
+				console.log('userid:',this.userid)
+			});
+
+			//this.getDateBeforeNow(this.data);
 			//let token = uni.getStorageSync('token')
 			/* uni.request({
 				method: 'get',
@@ -252,6 +316,9 @@
 			}) */
 		},
 		methods: {
+			// 时间格式化时间为：刚刚、多少分钟前、多少天前
+			//stringTime 2020-09-10 20:20:20
+			
 			reload() {
 				const pages = getCurrentPages()
 				const curPage = pages[pages.length - 1]
@@ -313,13 +380,9 @@
 			open() {
 				this.$refs.calendar.open()
 			},
-<<<<<<< HEAD
-			changeDate(data) {
-				this.date = data.ym
-=======
+
 			changeDate(date) {
 				this.date = date.ym
->>>>>>> 184d918ddffd13348075a44023bf041a9be86a29
 				console.log('date:', this.date)
 				this.taskList();
 			},
@@ -437,9 +500,16 @@
 					}) */
 				}
 			},
-			tapshow: function(item) {
+			tapshow: function(items) {
 				this.show = true
-				this.task_item_id= item.task_items[0].id
+				this.task_item_id= items.id
+				console.log('task_item_id:',this.task_item_id)
+				// for(let i =0; i<item.task_items.length; i++){//取id值
+				// 	this.taskItemArr.push(item.task_items[i])
+				// }
+				// let taskItemList = this.taskItemArr
+				// this.taskItemId = (taskItemList).findIndex ((taskItemList) => taskItemList.operator.id  ==  this.userid );
+				// this.task_item_id= item.task_items[this.taskItemId].id
 			},
 			taphide: function() {
 				this.show = false

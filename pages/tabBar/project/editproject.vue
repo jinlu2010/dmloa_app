@@ -26,7 +26,7 @@
 					<view class="title">服务目标</view>
 					<input class="input" v-model="goal"/>
 				</view>
-				<view class="form-item">
+				<!-- <view class="form-item">
 					<view class="title">项目周期</view>
 					<picker mode="date" :value="start_at" :start="startDate" :end="endDate" @change="startDateChange">
 						<view class="input">{{start_at}}
@@ -39,6 +39,12 @@
 							<uni-icons type="arrowdown" size="12" color="#999" class="pl20"></uni-icons>
 						</view>
 					</picker>
+				</view> -->
+				<view class="form-item">
+					<view class="title">项目周期</view>
+					<view style="width: 280px;">
+						<uni-datetime-picker v-model="range" type="daterange" @maskClick="maskClick" :border="false" :clearIcon="false"/>
+					</view>
 				</view>
 				<view class="form-item">
 					<view class="title">项目状态</view>
@@ -132,8 +138,15 @@
 					name: '紧急'
 				}],
 				project_id:'',
-				user_index:''
+				user_index:'',
+				range:[]
 			}
+		},
+		watch: {
+			range(newval) {
+				this.start_at = this.range[0]
+				this.end_at = this.range[1]
+			},
 		},
 		onLoad(option){
 			this.project_id = option.id
@@ -148,8 +161,9 @@
 					this.user_id = res.data.data.director.id,
 					console.log(this.user_id)
 					this.status_id = 0,
-					this.start_at = "2022-05-01",
-					this.end_at = "2022-05-31"
+					this.start_at = res.data.data.created_at,
+					this.end_at = res.data.data.endAt,
+					this.range = [res.data.data.created_at,res.data.data.endAt]
 				})
 				
 			this.axios.get('employee/get_all')

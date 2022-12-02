@@ -292,6 +292,9 @@ uni-button::after {
 .title {
 	color: #004343;
 	font-size: 28rpx;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .center {
@@ -917,11 +920,11 @@ checkbox-group {
 }
 .project-left{
 	width:60%;
-	line-height:100rpx;
+	line-height:108rpx;
 	margin:0;
 }
 .project-right{
-	line-height: 100rpx;
+	line-height: 108rpx;
 }
 .righttext{
 	text-align: right;
