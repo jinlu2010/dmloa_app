@@ -14,7 +14,7 @@
 						</view>
 					</picker>
 				</view>
-				<view class="form-item">
+				<!-- <view class="form-item">
 					<view class="title">日期</view>
 					<picker mode="date" :value="start_at" :start="startDate" :end="endDate" @change="bindDateChange1">
 						<view class="input">{{start_at}}
@@ -27,6 +27,12 @@
 							<uni-icons type="arrowdown" size="12" color="#999" class="pl20"></uni-icons>
 						</view>
 					</picker>
+				</view> -->
+				<view class="form-item">
+					<view class="title">项目周期</view>
+					<view style="width: 280px;">
+						<uni-datetime-picker v-model="range" type="daterange" @maskClick="maskClick" :border="false" :clearIcon="false"/>
+					</view>
 				</view>
 			</view>
 			<button class="btngreen btnform" @click="addSmallModule()">保存</button>
@@ -77,14 +83,21 @@
 				],
 				project_id:'',
 				project_name:'',
-				moudle_id:''
+				moudle_id:'',
+				range:[]
 			}
+		},
+		watch: {
+			range(newval) {
+				this.start_at = this.range[0]
+				this.end_at = this.range[1]
+			},
 		},
 		onLoad(option){
 			const item = JSON.parse(decodeURIComponent(option.item));
-			this.project_id = item.pid
-			this.module_name = item.name
-			this.moudle_id = item.mid
+			this.project_id = item.id
+			this.project_name = item.name
+			//this.moudle_id = item.mid
 			
 			this.axios.get('employee/get_all')
 				.then(res => {
@@ -98,10 +111,10 @@
 					director_user_id: this.userArr[this.user_id].id,
 					end_at:this.end_at,
 					start_at:this.start_at,
-					father_id:this.moudle_id,
-					level:1,
+					//father_id:this.moudle_id,
+					//level:1,
 					project_id:this.project_id,
-					name: this.module_name + '-' + this.name,
+					name: this.project_name + '-' + this.name,
 				}
 				let smodule = JSON.stringify(data);
 				console.log(smodule);

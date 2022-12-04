@@ -6,7 +6,7 @@
 					<view class="title">任务标题</view>
 					<input placeholder="请输入任务内容" class="input" v-model="name" />
 				</view>
-				<view class="form-item">
+				<!-- <view class="form-item">
 					<view class="title">开始时间</view>
 					<picker mode="date" :value="start_at" :start="startDate" :end="endDate" @change="startDateChange">
 						<view class="input">{{start_at}}
@@ -21,8 +21,13 @@
 							<uni-icons type="arrowdown" size="12" color="#999" class="pl20"></uni-icons>
 						</view>
 					</picker>
+				</view> -->
+				<view class="form-item">
+					<view class="title">任务周期</view>
+					<view style="width: 280px;">
+						<uni-datetime-picker v-model="range" type="daterange" @maskClick="maskClick" :border="false" :clearIcon="false"/>
+					</view>
 				</view>
-		
 				<view class="form-item">
 					<view class="title">所属项目</view>
 					<picker @change="projectArrChange" :value="project_id" :range="projectArr" range-key="name">
@@ -159,20 +164,14 @@
 						name: '',
 					}
 				],
-				checkboxItems02: [{
-						name: 'xuhuixiang',
-						value: '徐会香',
-					},
-					{
-						name: 'miaochong',
-						value: '苗冲',
-					},
-					{
-						name: 'zhangyuanfang',
-						value: '张远方',
-					}
-				],
+				range:[]
 			}
+		},
+		watch: {
+			range(newval) {
+				this.start_at = this.range[0]
+				this.end_at = this.range[1]
+			},
 		},
 		created() {
 			console.log(this.projectArr.length)
@@ -197,11 +196,18 @@
 				this.module =res.data.data.module.id,
 				this.user_type = res.data.data.itself,
 				this.remark=res.data.data.remark,
-				this.start_at=res.data.data.start_at,
-				this.end_at=res.data.data.end_at,
+				// this.start_at=res.data.data.start_at,
+				// this.end_at=res.data.data.end_at,
+				this.range = [res.data.data.start_at,res.data.data.end_at]
+				
+				this.axios.get('project/get_all').then(res => {
+					this.projectArr = res.data.data
+					let projectlist = this.projectArr
+					this.project_id = (projectlist).findIndex ((projectlist) => projectlist.id  ==  this.project );
+				})
 				this.axios.get('module/get_all',{
 					params: {
-						'level_id': 1,
+						//'level_id': 1,
 						'project_id':this.project
 					}
 				}).then(res => {
@@ -209,12 +215,6 @@
 					let modulelist = this.moduleArr
 					this.module_id = (modulelist).findIndex ((modulelist) => modulelist.id  ==  this.module );
 				})
-			})
-			
-			this.axios.get('project/get_all').then(res => {
-				this.projectArr = res.data.data
-				let projectlist = this.projectArr
-				this.project_id = (projectlist).findIndex ((projectlist) => projectlist.id  ==  this.project );
 			})
 		},
 		methods: {
@@ -305,7 +305,7 @@
 					this.projectArr = res.data.data
 					this.axios.get('module/get_all',{
 						params: {
-							'level_id': 1,
+							//'level_id': 1,
 							'project_id':this.projectArr[this.project_id].id
 						}
 					}).then(res => {
@@ -313,23 +313,12 @@
 					})
 				})
 			},
-			// moduleList: function(e) {
-			// 	console.log('project_id:',this.projectArr[this.project_id].id)
-			// 	this.axios.get('module/get_all',{
-			// 		params: {
-			// 			'level_id': 1,
-			// 			'project_id':this.projectArr[this.project_id].id
-			// 		}
-			// 	}).then(res => {
-			// 		this.moduleArr = res.data.data
-			// 		console.log('module:',this.moduleArr)
-			// 	})
-			// },
+			
 			projectArrChange: function(e) {
 				this.project_id = e.detail.value
 				this.axios.get('module/get_all',{
 					params: {
-						'level_id': 1,
+						//'level_id': 1,
 						'project_id':this.projectArr[this.project_id].id
 					}
 				}).then(res => {

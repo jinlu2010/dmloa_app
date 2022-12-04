@@ -72,7 +72,7 @@
 					<text class="title teamkpi">我的绩效</text>
 					<uni-icons type="arrowright" size="24" color="#CCC" class="right"></uni-icons>
 				</view>
-				<view class="list-item-content" @tap="Team">
+				<view class="list-item-content" @tap="Team" v-show="manager">
 					<image src="../../static/image/icon13.png"></image>
 					<text class="title teamkpi">团队绩效</text>
 					<uni-icons type="arrowright" size="24" color="#CCC" class="right"></uni-icons>
@@ -109,6 +109,7 @@
 				postname:'',
 				admin:false,
 				adminType:1,//0普通 1管理员
+				manager:false
 			}
 		},
 		onLoad(){
@@ -119,6 +120,7 @@
 				this.dept_id = res.data.data.department.id;
 				this.postname = res.data.data.job.name;
 				this.adminType = res.data.data.adminType;
+				this.manager = res.data.data.manager;
 				if(this.adminType == 0){
 					this.admin = false;
 				}else{
@@ -201,6 +203,6 @@
 
 <style>
 	.uni-icons{
-		line-height: 110rpx;
+		line-height: 108rpx;
 	}
 </style>

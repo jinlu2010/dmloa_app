@@ -14,7 +14,7 @@
 						</view>
 					</picker>
 				</view>
-				<view class="form-item">
+				<!-- <view class="form-item">
 					<view class="title">日期</view>
 					<picker mode="date" :value="start_at" :start="startDate" :end="endDate" @change="startDateChange">
 						<view class="input">{{start_at}}
@@ -27,6 +27,12 @@
 							<uni-icons type="arrowdown" size="12" color="#999" class="pl20"></uni-icons>
 						</view>
 					</picker>
+				</view> -->
+				<view class="form-item">
+					<view class="title">项目周期</view>
+					<view style="width: 280px;">
+						<uni-datetime-picker v-model="range" type="daterange" @maskClick="maskClick" :border="false" :clearIcon="false"/>
+					</view>
 				</view>
 				<view class="form-item">
 					<view class="title">状态</view>
@@ -96,12 +102,19 @@
 				module_id:'',
 				father_id:'',
 				index:0,
+				range:[]
 			}
+		},
+		watch: {
+			range(newval) {
+				this.start_at = this.range[0]
+				this.end_at = this.range[1]
+			},
 		},
 		onLoad(option){
 			const item = JSON.parse(decodeURIComponent(option.item))
 			this.module_id = item.id
-			this.father_id = item.mid
+			//this.father_id = item.mid
 			this.axios.get('module/get', {
 				params: {
 					'id': this.module_id,
@@ -113,6 +126,7 @@
 				this.start_at=res.data.data.start_at,
 				this.end_at=res.data.data.end_at,
 				this.project_id=res.data.data.project.id
+				this.range = [res.data.data.start_at,res.data.data.end_at]
 			})
 			
 			this.axios.get('employee/get_all')
@@ -128,8 +142,8 @@
 					director_user_id: this.userArr[this.index].id,
 					end_at:this.end_at,
 					start_at:this.start_at,
-					father_id:this.father_id,
-					level:1,
+					// father_id:this.father_id,
+					// level:1,
 					project_id:this.project_id,
 					name: this.name,
 					id:this.module_id

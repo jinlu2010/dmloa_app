@@ -226,7 +226,8 @@
 					skill: this.skillout,
 					status: this.status_id,
 					superior_id: this.reportArr[this.report_id].id,
-					adminType: this.adminType
+					adminType: this.adminType,
+					is_manager:this.is_manager
 				}
 				let staff = JSON.stringify(data);
 				console.log(staff);

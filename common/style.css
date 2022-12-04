@@ -292,6 +292,9 @@ uni-button::after {
 .title {
 	color: #004343;
 	font-size: 28rpx;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .center {
@@ -845,7 +848,7 @@ checkbox-group {
 }
 
 .teamkpi {
-	line-height: 110rpx;
+	line-height: 108rpx;
 	margin-right: 20rpx;
 }
 
@@ -917,16 +920,16 @@ checkbox-group {
 }
 .project-left{
 	width:60%;
-	line-height:100rpx;
+	line-height:108rpx;
 	margin:0;
 }
 .project-right{
-	line-height: 100rpx;
+	line-height: 108rpx;
 }
 .righttext{
 	text-align: right;
 	float: right;
-	line-height: 110rpx;
+	line-height: 108rpx;
 	color: #999999;
 	font-size: 22rpx;
 }

@@ -3,7 +3,7 @@
 		<view class="list">
 			<view class="list-item-container rightlist">
 				<view v-if="smallmodulelist.length == 0">
-					<text class="none" style="height: 110rpx;">还没有创建小模块哦~</text>
+					<text class="none" style="height: 110rpx;">还没有创建模块哦~</text>
 				</view>
 				<view class="list-item-content" @tap="WorkSheet(item)" v-for="item in smallmodulelist" :key="item.id">
 					<text class="title teamkpi">{{item.name}}</text>
@@ -14,10 +14,14 @@
 		</view>
 		<view class="project-button">
 			<view v-if="smallmodulelist.length == 0">
-				<button class="hidden" @tap="EditSmallModule">编辑项目小模块</button>
+				<button class="hidden" @tap="EditSmallModule">编辑项目模块</button>
+				<button @tap="EditProject" class="btngreen">编辑项目详情</button>
+				<button @tap="ProjectDetail" class="btngreen">查看项目详情</button>
 			</view>
-			<view v-if="bigmodulelist.length != 0">
-				<button class="btngreen" @tap="EditSmallModule">编辑项目小模块</button>
+			<view v-if="smallmodulelist.length != 0">
+				<button class="btngreen" @tap="EditSmallModule">编辑项目模块</button>
+				<button @tap="EditProject" class="btngreen">编辑项目详情</button>
+				<button @tap="ProjectDetail" class="btngreen">查看项目详情</button>
 			</view>
 		</view>
 	</view>
@@ -30,7 +34,8 @@
 				smallmodulelist:[],
 				module_id:'',
 				module_name:'',
-				project_id:''
+				project_id:'',
+				project_name:''
 			}
 		},
 		onShow() {
@@ -38,16 +43,16 @@
 		},
 		onLoad(option){
 			const item = JSON.parse(decodeURIComponent(option.item))
-			this.module_id = item.id
-			this.module_name = item.name
-			this.project_id = item.pid
+			this.project_id = item.id
+			this.project_name = item.name
 		},
 		methods: {
 			SmallModuleList:function(){
 				this.axios.get('module/get_all', {
 					params: {
-						'level_id': 1,
-						'father_id':this.module_id
+						'project_id':this.project_id
+						//'level_id': 1,
+						//'father_id':this.module_id
 					}
 				}).then(res => {
 					this.smallmodulelist=res.data.data
@@ -65,12 +70,22 @@
 			},
 			EditSmallModule:function(){
 				var data ={
-					'pid':this.project_id,
-					'id':this.module_id,
-					'name':this.module_name
+					'id':this.project_id,
+					//'id':this.module_id,
+					'name':this.project_name
 				}
 				uni.navigateTo({
 					url: 'editsmallmodule?item='+ encodeURIComponent(JSON.stringify(data))
+				})
+			},
+			EditProject:function(){
+				uni.navigateTo({
+					url: 'editproject?id=' + this.project_id,
+				})
+			},
+			ProjectDetail:function(){
+				uni.navigateTo({
+					url: 'projectdetail?id=' + this.project_id,
 				})
 			}
 		}

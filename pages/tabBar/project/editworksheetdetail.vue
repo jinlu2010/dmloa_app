@@ -14,13 +14,19 @@
 						</view>
 					</picker>
 				</view>
-				<view class="form-item">
+				<!-- <view class="form-item">
 					<view class="title">截止</view>
 					<picker mode="date" :value="end_at" :start="startDate" :end="endDate" @change="endDateChange">
 						<view class="input">{{end_at}}
 							<uni-icons type="arrowdown" size="12" color="#999" class="pl20"></uni-icons>
 						</view>
 					</picker>
+				</view> -->
+				<view class="form-item">
+					<view class="title">项目周期</view>
+					<view style="width: 280px;">
+						<uni-datetime-picker v-model="range" type="daterange" @maskClick="maskClick" :border="false" :clearIcon="false"/>
+					</view>
 				</view>
 				<view class="form-item">
 					<view class="title">状态</view>
@@ -90,8 +96,15 @@
 				father_id:'',
 				index:0,
 				task_id:'',
-				user_ids:[]
+				user_ids:[],
+				range:[]
 			}
+		},
+		watch: {
+			range(newval) {
+				this.start_at = this.range[0]
+				this.end_at = this.range[1]
+			},
 		},
 		onLoad(option){
 			const item = JSON.parse(decodeURIComponent(option.item))
@@ -109,6 +122,7 @@
 				this.start_at=res.data.data.start_at,
 				this.end_at=res.data.data.end_at,
 				this.status_id=res.data.data.status_id
+				this.range=[res.data.data.start_at,res.data.data.end_at]
 				//this.project_id=res.data.data.project.id
 				for(let i =0; i< res.data.data.task_items.length; i++){//取id值
 					this.user_ids.push(JSON.stringify(res.data.data.task_items[i].operator.id))

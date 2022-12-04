@@ -26,7 +26,7 @@
 					<view class="title">服务目标</view>
 					<input placeholder="请输入服务目标" class="input" v-model="goal"/>
 				</view>
-				<view class="form-item">
+				<!-- <view class="form-item">
 					<view class="title">项目周期</view>
 					<picker mode="date" :value="start_at" :start="startDate" :end="endDate" @change="startDateChange">
 						<view class="input">{{start_at}}
@@ -39,6 +39,12 @@
 							<uni-icons type="arrowdown" size="12" color="#999" class="pl20"></uni-icons>
 						</view>
 					</picker>
+				</view> -->
+				<view class="form-item">
+					<view class="title">项目周期</view>
+					<view style="width: 280px;">
+						<uni-datetime-picker v-model="range" type="daterange" @maskClick="maskClick" :border="false" :clearIcon="false"/>
+					</view>
 				</view>
 				<view class="form-item">
 					<view class="title">项目状态</view>
@@ -129,7 +135,14 @@
 					id: 1,
 					name: '紧急'
 				}],
+				range:[]
 			}
+		},
+		watch: {
+			range(newval) {
+				this.start_at = this.range[0]
+				this.end_at = this.range[1]
+			},
 		},
 		onLoad(){
 			this.axios.get('employee/get_all')

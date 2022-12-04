@@ -33,7 +33,8 @@
 				smallmodulelist:[],
 				module_id:'',
 				module_name:'',
-				project_id:''
+				project_id:'',
+				project_name:''
 			}
 		},
 		onShow() {
@@ -41,16 +42,17 @@
 		},
 		onLoad(option){
 			const item = JSON.parse(decodeURIComponent(option.item))
-			this.module_id = item.id
-			this.module_name = item.name
-			this.project_id = item.pid
+			//this.module_id = item.id
+			this.project_name = item.name
+			this.project_id = item.id
 		},
 		methods: {
 			SmallModuleList:function(){
 				this.axios.get('module/get_all', {
 					params: {
-						'level_id': 1,
-						'father_id':this.module_id
+						'project_id':this.project_id
+						// 'level_id': 1,
+						// 'father_id':this.module_id
 					}
 				}).then(res => {
 					this.smallmodulelist=res.data.data
@@ -59,7 +61,7 @@
 			},
 			EditSmallModuleDetail:function(item){
 				var data ={
-					'mid':this.module_id,
+					//'mid':this.module_id,
 					'id':item.id,
 				}
 				uni.navigateTo({
@@ -68,9 +70,9 @@
 			},
 			NewSmallModule:function(){
 				var data ={
-					'mid':this.module_id,
-					'name':this.module_name,
-					'pid':this.project_id
+					//'mid':this.module_id,
+					'name':this.project_name,
+					'id':this.project_id
 				}
 				uni.navigateTo({
 					url: 'newsmallmodule?item='+ encodeURIComponent(JSON.stringify(data))

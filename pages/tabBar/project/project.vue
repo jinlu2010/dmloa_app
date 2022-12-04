@@ -35,13 +35,14 @@
 							<text class="title teamkpi">{{item.name}}</text>
 						</view>
 						<view class="list-content-right project-right">
-							<button class="btngreen" @tap="NewBigModule(item)">创建大模块</button>
+							<!-- <button class="btngreen" @tap="NewBigModule(item)">创建大模块</button> -->
+							<button class="btngreen" @tap="NewSmallModule(item)">创建模块</button>
 						</view>
 					</view>
 				</view>
 			</view>
 			<!--创建好项目后，大模块负责人看到的界面，由大模块负责人创建小模块-->
-			<view class="list">
+			<!-- <view class="list">
 				<view class="list-item-container">
 					<view class="list-item-content pr60" v-for="item in bigmodulelist" :key="item.id">
 						<view class="project-left">
@@ -52,7 +53,7 @@
 						</view>
 					</view>
 				</view>
-			</view>
+			</view> -->
 			<!--创建大模块后，小模块负责人看到的界面，由小模块负责人创建工单-->
 			<view class="list">
 				<view class="list-item-container">
@@ -75,7 +76,7 @@
 			</view>
 			<view class="list">
 				<view class="list-item-container rightlist">
-					<view class="list-item-content" @tap="BigModuleing(item)" v-for="item in projectlist" :key="item.id">
+					<view class="list-item-content" @tap="SmallModule(item)" v-for="item in projectlist" :key="item.id">
 						<text class="title teamkpi">{{item.name}}</text>
 						<uni-icons type="arrowright" size="20" color="#CCC" class="right lh"></uni-icons>
 						<text class="righttext">已完成70%</text>
@@ -136,23 +137,23 @@
 						this.smallmodulelist=[]
 						console.log('projectlist:',this.projectlist)
 						for(let i=0; i<this.projectlist.length; i++){//取id值
-							this.axios.get('module/get_all', {
-								params: {
-									'level_id': 0,
-									'project_id':this.projectlist[i].id
-								}
-							}).then(res => {
-								this.bigmoduleArr=res.data.data
+							// this.axios.get('module/get_all', {
+							// 	params: {
+							// 		'level_id': 0,
+							// 		'project_id':this.projectlist[i].id
+							// 	}
+							// }).then(res => {
+							// 	this.bigmoduleArr=res.data.data
 								
-								for(let j=0;j<this.bigmoduleArr.length;j++){
-									this.bigmodulelist.push({
-										id:this.bigmoduleArr[j].id,
-										name:this.bigmoduleArr[j].name,
-										project:this.bigmoduleArr[j].project
-									})
-								}
-								console.log('bigmodulelist:',this.bigmodulelist)
-							})
+							// 	for(let j=0;j<this.bigmoduleArr.length;j++){
+							// 		this.bigmodulelist.push({
+							// 			id:this.bigmoduleArr[j].id,
+							// 			name:this.bigmoduleArr[j].name,
+							// 			project:this.bigmoduleArr[j].project
+							// 		})
+							// 	}
+							// 	console.log('bigmodulelist:',this.bigmodulelist)
+							// })
 
 							this.axios.get('module/get_all', {
 								params: {
@@ -202,6 +203,16 @@
 					url: 'bigmoduleing?item='+ encodeURIComponent(JSON.stringify(data))
 				})
 			},
+			SmallModule:function(item){
+				var data ={
+					'name':item.name,
+					'id':item.id,
+					//'pid':this.project_id
+				}
+				uni.navigateTo({
+					url: 'smallmoduleing?item='+ encodeURIComponent(JSON.stringify(data))
+				})
+			},
 			BigModuleed: function() {
 				uni.navigateTo({
 					url: 'bigmoduleed',
@@ -215,8 +226,9 @@
 			NewSmallModule:function(item){
 				var data ={
 					'name':item.name,
-					'mid':item.id,
-					'pid':item.project.id
+					'id':item.id
+					//'mid':item.id,
+					//'pid':item.project.id
 				}
 				uni.navigateTo({
 					url: 'newsmallmodule?item='+ encodeURIComponent(JSON.stringify(data)),
