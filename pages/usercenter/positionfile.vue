@@ -2,65 +2,72 @@
 	<view class="detail">
 		<view class="form">
 			<view class="form-item">
+				<view class="title">岗位名称</view>
+				<view class="textarea height">{{name}}</view>
+			</view>
+			<view class="form-item">
 				<view class="title">岗位意义</view>
-				<view class="textarea height">下面我们会从不同维度来分析一下APP的社交分享功能设计，看看这里面有哪些值得探讨之处。下面我们会从不同维度来分析一下APP的社交分享功能设计，看看这里面有哪些值得探讨之处。</view>
+				<view class="textarea height">{{significance}}</view>
 			</view>
 			<view class="form-item">
 				<view class="title">工作概要</view>
-				<view class="textarea height">面我们会从不同维度来分析一下APP的社交分享功能设计，看看这里面有哪些值得探讨之处。</view>
+				<view class="textarea height">{{outline}}</view>
 			</view>
 			<view class="form-item">
 				<view class="title">运营工作</view>
 				<view class="textarea height">
-					<view class="textarea-item"><text class="left">制定并汇报工作计划</text><text class="right">1-2分</text></view>
-					<view class="textarea-item"><text class="left">向上级总结汇报</text><text class="right">1-2分</text></view>
+					<view class="textarea-item" v-for="(item,index) in operateArr" :key="index">
+						<text class="left">{{item.content}}</text><text class="right">{{item.score}}分</text>
+					</view>
 				</view>
 			</view>
 			<view class="form-item">
 				<view class="title">管理工作</view>
 				<view class="textarea height">
-					<view class="textarea-item"><text class="left">阅读、审核和优化下属工作计划</text><text class="right">1-3分</text></view>
-					<view class="textarea-item"><text class="left">阅读和指导下属总结汇报</text><text class="right">1-3分</text></view>
+					<view class="textarea-item" v-for="(item,index) in manageArr" :key="index">
+						<text class="left">{{item.content}}</text><text class="right">{{item.score}}分</text>
+					</view>
 				</view>
 			</view>
 			<view class="form-item">
 				<view class="title">技能工作</view>
 				<view class="textarea height">
-					<view class="textarea-item"><text class="left">根据公司年度推广计划，制定年度新媒体推广方案及预算</text><text class="right">1-2分</text></view>
-					<view class="textarea-item">向上级总结汇报<text class="right">1-2分</text></view>
+					<view class="textarea-item" v-for="(item,index) in skillArr" :key="index">
+						<text class="left">{{item.content}}</text><text class="right">{{item.score}}分</text>
+					</view>
 				</view>
 			</view>
 			<view class="form-item">
-				<view class="title">岗位权限</view>
-				<view class="textarea height">无</view>
+				<view class="title">岗位权力</view>
+				<view class="textarea height">{{power}}</view>
 			</view>
 			<view class="form-item">
 				<view class="title">技能要求</view>
-				<view class="textarea height">无</view>
+				<view class="textarea height">{{skill}}</view>
 			</view>
 			<view class="form-item">
 				<view class="title">资产配置</view>
-				<view class="textarea height">无</view>
+				<view class="textarea height">{{capital}}</view>
 			</view>
 			<view class="form-item">
 				<view class="title">招聘要求</view>
-				<view class="textarea height">无</view>
+				<view class="textarea height">{{recruit}}</view>
 			</view>
 			<view class="form-item">
 				<view class="title">工作环境</view>
-				<view class="textarea height">无</view>
+				<view class="textarea height">{{environment}}</view>
 			</view>
 			<view class="form-item">
 				<view class="title">发展方向</view>
-				<view class="textarea height">无</view>
+				<view class="textarea height">{{direction}}</view>
 			</view>
 			<view class="form-item">
 				<view class="title">福利标准</view>
-				<view class="textarea height">无</view>
+				<view class="textarea height">{{welfare}}</view>
 			</view>
 			<view class="form-item">
 				<view class="title">淘汰标准</view>
-				<view class="textarea height">无</view>
+				<view class="textarea height">{{eliminate}}</view>
 			</view>
 		</view>
 	</view>
@@ -71,7 +78,20 @@
 		data() {
 			return {
 				post_id:'',
-				postname:''
+				name: '',
+				capital: '',
+				direction: '',
+				eliminate: '',
+				environment: '',
+				manageArr: [],
+				operateArr: [],
+				outline: '',
+				power: '',
+				recruit: '',
+				significance: '',
+				skill: [],
+				skillArr: [],
+				welfare: ''
 			}
 		},
 		onLoad(option){
@@ -82,7 +102,20 @@
 					'id': this.post_id
 				}
 			}).then(res => {
-				this.postname=res.data.data.name
+				this.name = res.data.data.name
+				this.capital = res.data.data.capital 
+				this.direction = res.data.data.direction
+				this.eliminate = res.data.data.eliminate
+				this.environment = res.data.data.environment
+				this.manageArr = res.data.data.manageArr
+				this.operateArr = res.data.data.operateArr
+				this.outline = res.data.data.outline
+				this.power = res.data.data.power
+				this.recruit = res.data.data.recruit
+				this.significance = res.data.data.significance
+				this.skill = res.data.data.skill
+				this.skillArr = res.data.data.skillArr
+				this.welfare = res.data.data.welfare
 			})
 		},
 		methods: {

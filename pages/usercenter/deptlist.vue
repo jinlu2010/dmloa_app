@@ -15,7 +15,7 @@
 								{{item.name}}
 								<uni-icons type="trash" size="20" color="#999" class="pl40 right" @click="DelDept(item)"></uni-icons>
 								<uni-icons type="compose" size="20" color="#999" class="pl40 right" @click="EditDept(item)"></uni-icons>
-								<uni-icons type="contact" size="20" color="#999" class="pl40 right" @click="tapshow(item)"></uni-icons>
+								<!-- <uni-icons type="contact" size="20" color="#999" class="pl40 right" @click="tapshow(item)"></uni-icons> -->
 								
 								<view class="deptname" v-for="post in item.post" :key="post.id">
 									<text class="pl60">{{post.name}}</text>

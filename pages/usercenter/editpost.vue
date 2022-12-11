@@ -16,14 +16,14 @@
 			<view class="form-item">
 				<view class="title">岗位意义</view>
 				<view class="textarea">
-					<textarea @blur="significanceBlur" auto-height placeholder="请输入岗位意义" v-model="significance" />
+					<textarea auto-height placeholder="请输入岗位意义" v-model="significance" />
 				</view>
 			</view>
 		
 			<view class="form-item">
 				<view class="title">工作概要</view>
 				<view class="textarea">
-					<textarea @blur="outlineBlur" auto-height placeholder="请输入工作概要" v-model="outline" />
+					<textarea auto-height placeholder="请输入工作概要" v-model="outline" />
 				</view>
 			</view>
 			
@@ -32,8 +32,8 @@
 				<view class="textarea height">
 					<view class="textarea-item">
 						<view class="textarea-content" v-for="(item,index) in operateArr" :key="index">
-							<input placeholder="请输入工作内容" class="input wd100" v-model="operateArr.content" />
-							<input placeholder="评分标准" class="input wd25" v-model="operateArr.score" />
+							<input placeholder="请输入工作内容" class="input wd100" v-model="item.content" />
+							<input placeholder="评分标准" class="input wd25" v-model="item.score" />
 							<uni-icons type="minus" size="20" color="#ccc" class="lh90" @click="removeOperate(index)"></uni-icons>
 						</view>
 						<uni-icons type="plus" size="24" color="#ccc" class="addcontent" @click="addOperate"></uni-icons>
@@ -44,8 +44,8 @@
 				<view class="title">管理工作</view>
 				<view class="textarea height">
 					<view class="textarea-content" v-for="(item,index) in manageArr" :key="index">
-						<input placeholder="请输入工作内容" class="input wd100" v-model="manageArr.content" />
-						<input placeholder="评分标准" class="input wd25" v-model="manageArr.score" />
+						<input placeholder="请输入工作内容" class="input wd100" v-model="item.content" />
+						<input placeholder="评分标准" class="input wd25" v-model="item.score" />
 						<uni-icons type="minus" size="20" color="#ccc" class="lh90" @click="removeManage(index)"></uni-icons>
 					</view>
 					<uni-icons type="plus" size="24" color="#ccc" class="addcontent" @click="addManage"></uni-icons>
@@ -55,8 +55,8 @@
 				<view class="title">技能工作</view>
 				<view class="textarea height">
 					<view class="textarea-content" v-for="(item,index) in skillArr" :key="index">
-						<input placeholder="请输入工作内容" class="input wd100" v-model="skillArr.content" />
-						<input placeholder="评分标准" class="input wd25" v-model="skillArr.score" />
+						<input placeholder="请输入工作内容" class="input wd100" v-model="item.content" />
+						<input placeholder="评分标准" class="input wd25" v-model="item.score" />
 						<uni-icons type="minus" size="20" color="#ccc" class="lh90" @click="removeSkill(index)"></uni-icons>
 					</view>
 					<uni-icons type="plus" size="24" color="#ccc" class="addcontent" @click="addSkill"></uni-icons>
@@ -66,49 +66,49 @@
 			<view class="form-item">
 				<view class="title">岗位权力</view>
 				<view class="textarea">
-					<textarea @blur="powerBlur" auto-height placeholder="请输入岗位权力" v-model="power" />
+					<textarea auto-height placeholder="请输入岗位权力" v-model="power" />
 				</view>
 			</view>
 			<view class="form-item">
 				<view class="title">技能要求</view>
 				<view class="textarea">
-					<textarea @blur="skillBlur" auto-height placeholder="请输入技能要求" v-model="skill" />
+					<textarea auto-height placeholder="请输入技能要求" v-model="skill" />
 				</view>
 			</view>
 			<view class="form-item">
 				<view class="title">资产配置</view>
 				<view class="textarea">
-					<textarea @blur="capitalBlur" auto-height placeholder="请输入资产配置" v-model="capital" />
+					<textarea auto-height placeholder="请输入资产配置" v-model="capital" />
 				</view>
 			</view>
 			<view class="form-item">
 				<view class="title">招聘要求</view>
 				<view class="textarea">
-					<textarea @blur="recruitBlur" auto-height placeholder="请输入招聘要求" v-model="recruit" />
+					<textarea auto-height placeholder="请输入招聘要求" v-model="recruit" />
 				</view>
 			</view>
 			<view class="form-item">
 				<view class="title">工作环境</view>
 				<view class="textarea">
-					<textarea @blur="environmentBlur" auto-height placeholder="请输入工作环境" v-model="environment" />
+					<textarea auto-height placeholder="请输入工作环境" v-model="environment" />
 				</view>
 			</view>
 			<view class="form-item">
 				<view class="title">发展方向</view>
 				<view class="textarea">
-					<textarea @blur="directionBlur" auto-height placeholder="请输入发展方向" v-model="direction" />
+					<textarea auto-height placeholder="请输入发展方向" v-model="direction" />
 				</view>
 			</view>
 			<view class="form-item">
 				<view class="title">福利标准</view>
 				<view class="textarea">
-					<textarea @blur="welfareBlur" auto-height placeholder="请输入福利标准" v-model="welfare" />
+					<textarea auto-height placeholder="请输入福利标准" v-model="welfare" />
 				</view>
 			</view>
 			<view class="form-item">
 				<view class="title">淘汰标准</view>
 				<view class="textarea">
-					<textarea @blur="eliminateBlur" auto-height placeholder="请输入淘汰标准" v-model="eliminate" />
+					<textarea auto-height placeholder="请输入淘汰标准" v-model="eliminate" />
 				</view>
 			</view>
 		</view>
@@ -132,19 +132,19 @@
 				deptArr: [],
 				operate_id:0,
 				operateArr:[{
-					id:0,
+					//id:0,
 					content:'',
 					score:''
 				}],
 				manage_id:0,
 				manageArr:[{
-					id:0,
+					//id:0,
 					content:'',
 					score:''
 				}],
 				skill_id:0,
 				skillArr:[{
-					id:0,
+					//id:0,
 					content:'',
 					score:''
 				}],
@@ -163,7 +163,6 @@
 			}
 		},
 		onLoad(option) {
-			console.log('option:',option)
 			this.post_id = option.id
 			console.log('postId:',this.post_id)
 			this.axios.get('job/get', {
@@ -173,7 +172,7 @@
 			}).then(res => {
 				console.log(res.data.data)
 				this.name = res.data.data.name,
-				this.department_id = res.data.data.deptArr.id,
+				this.department_id = res.data.data.department.id,
 				this.capital = res.data.data.capital,
 				this.direction = res.data.data.direction,
 				this.eliminate = res.data.data.eliminate,
@@ -191,8 +190,8 @@
 			this.axios.get('department/get_all').then(res => {
 				this.deptArr = res.data.data
 				let deptlist = this.deptArr
-				this.index = (deptlist).findIndex ((deptlist) => deptlist.id  ==  this.department_id );
-				console.log(this.index)
+				this.dept_id = (deptlist).findIndex ((deptlist) => deptlist.id  ==  this.department_id );
+				console.log(this.dept_id)
 			})
 		},
 		methods: {
@@ -248,30 +247,30 @@
 					})
 			},
 			deptChange: function(e) {
-				this.index = e.detail.value
+				this.dept_id = e.detail.value
 			},
 			addOperate(){
-				this.operate_id += 1
+				//this.operate_id += 1
 				this.operateArr.push({
-					id: this.operate_id,
+					//id: this.operate_id,
 					content: '',
 					score:''
 				});
 				console.log(this.operateArr);
 			},
 			addManage(){
-				this.manage_id += 1
+				//this.manage_id += 1
 				this.manageArr.push({
-					id: this.manage_id,
+					//id: this.manage_id,
 					content: '',
 					score:''
 				});
 				console.log(this.manageArr);
 			},
 			addSkill(){
-				this.skill_id += 1
+				//this.skill_id += 1
 				this.skillArr.push({
-					id: this.skill_id,
+					//id: this.skill_id,
 					content: '',
 					score:''
 				});
