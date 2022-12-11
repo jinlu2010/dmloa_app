@@ -34,7 +34,7 @@
 							<view class="full"></view>
 						</view> -->
 						<text class="title">{{item.name}}</text>
-						<text class="note">From {{item.creator.name}} </text>
+						<text class="note">From {{item.creator.name}} 逾期{{getGraceDateBeforeNow(item.end_at)}}</text>
 					</view>
 					<!-- <view class="list-content-right" v-if="item.task_items[this.taskItemId].finished == false && item.task_items[this.taskItemId].stopped == false">
 						<button class="btngreen" @tap.stop="tapshow(item)">进行中</button>
@@ -232,7 +232,7 @@
 				dateWidth: '',
 				dateHeight: '',
 				
-				getDateBeforeNow:getDateBeforeNow('2020-09-10 20:20:20'),
+				getDateBeforeNow:getDateBeforeNow('2022-12-10'),
 				
 				
 				date: getDate({
@@ -316,6 +316,9 @@
 			}) */
 		},
 		methods: {
+			getGraceDateBeforeNow(date){
+				return getDateBeforeNow(date)
+			},
 			// 时间格式化时间为：刚刚、多少分钟前、多少天前
 			//stringTime 2020-09-10 20:20:20
 			

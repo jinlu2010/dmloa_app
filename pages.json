@@ -60,7 +60,7 @@
 		,{
 		    "path" : "pages/tabBar/project/newsmallmodule",
 		    "style" : {
-				"navigationBarTitleText": "新建小模块"
+				"navigationBarTitleText": "新建模块"
 			}
 		}
 		,{
@@ -78,13 +78,13 @@
 		,{
 		    "path" : "pages/tabBar/project/editsmallmodule",
 		    "style" : {
-				"navigationBarTitleText": "编辑小模块"
+				"navigationBarTitleText": "编辑模块"
 			}
 		}
 		,{
 		    "path" : "pages/tabBar/project/editsmallmoduledetail",
 		    "style" : {
-				"navigationBarTitleText": "编辑小模块详情"
+				"navigationBarTitleText": "编辑模块详情"
 			}
 		}
 		,{
@@ -120,7 +120,7 @@
 		,{
 		    "path" : "pages/tabBar/project/smallmoduleing",
 		    "style" : {
-				"navigationBarTitleText": "小模块"
+				"navigationBarTitleText": "模块"
 			}
 		}
 		,{

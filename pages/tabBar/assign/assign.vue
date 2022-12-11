@@ -15,11 +15,12 @@
 			</view>
 		</view>
 		<view class="place"></view>
-		<view class="tabbar">
+		<view class="tabbar project">
 			<view class="bgtab"></view>
-			<view class="tab-title">
-				<view @tap="toassign" :class="{active:btncontent == 0}">未分配任务</view>
+			<view class="tab-title ">
+				<view @tap="toassign" :class="{active:btncontent == 0}">待分配任务</view>
 				<view @tap="assigned" :class="{active:btncontent == 1}">已分配任务</view>
+				<view @tap="delayed" :class="{active:btncontent == 2}">延期任务</view>
 			</view>
 		</view>
 
@@ -82,6 +83,31 @@
 				</view>
 			</view>
 		</view>
+		
+		<view class="tab-content" :class="{tab:btncontent == 2}">
+			
+			<view class="list-layout delay">
+				<view class="list assign">
+					<view v-if="delaylist == ''">
+						<text class="none">没有延期任务哦~</text>
+					</view>
+					<view class="list-item-content pr60 listheight" v-for="item in delaylist" :key="item.id" @tap="Detail(item)">
+						<view class="list-content-left">
+							<text class="title">{{item.name}}</text>
+							<view class="operator">To<text class="pl20">{{}}</text>
+							</view>
+						</view>
+						<view class="list-content-middle">
+							<text class="note">已延期xx天</text>
+							<text class="date grey">至{{}}</text>
+						</view>
+						<view class="list-content-right">
+							<button class="btngreen" @tap.stop="EditTask(item)">修改</button>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -113,7 +139,9 @@
 				taskdetail:[],
 				finished:'',
 				nowdate:new Date().toISOString().slice(0, 10),
-				show:false
+				show:false,
+				userid:'',
+				delaylist:[]
 			}
 		},
 		onShow() {
@@ -129,6 +157,9 @@
 			// 		that.dateHeight = this.screenHeight + "rpx";
 			// 	}
 			// });
+			this.axios.get('profile/get').then(res => {
+				this.userid = res.data.data.id;
+			})
 		},
 		methods: {
 			reload() {
@@ -145,6 +176,18 @@
 				var choosetime = e.fulldate;
 				this.info.date = choosetime;
 				this.assigned()
+			},
+			delayed: function() {
+				this.btncontent = 2;
+				this.axios.get('task/delays', {
+						params: {
+							'user_id': this.userid
+						}
+					})
+					.then(res => {
+						this.delaylist = res.data.data
+						console.log(this.delaylist)
+					})
 			},
 			toassign: function() {
 				this.btncontent = 0;
@@ -269,5 +312,8 @@
 	}
 	.hidden{
 		display: none !important;
+	}
+	.delay{
+		margin-top: 0 !important;
 	}
 </style>

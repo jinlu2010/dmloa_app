@@ -96,8 +96,8 @@
 					<view class="list-item-content pr60 pt20 listheight" @tap="Detail">
 						<view class="list-content-left">
 							<text class="title">{{item.name}}</text>
-							<!-- <text class="note">{{item.marking_at.slice(5,10)}} From {{item.operator.name}}</text> -->
-							<text class="note">{{item.marking_at}} From {{item.operator.name}}</text>
+							<text class="note">{{item.marking_at.slice(5,10)}} From {{item.operator.name}}</text>
+							<!-- <text class="note">{{item.marking_at}} From {{item.operator.name}}</text> -->
 						</view>
 						<view class="list-content-right">
 							<text class="h1 lh120">+{{item.score}}</text>
