@@ -1,8 +1,9 @@
 <template>
 	<view class="cal">
 		<view class="cal-top">
-			<text ref="t1">{{nowSelectDateString}}</text>
+			<text ref="t1" @click="open">{{nowSelectDateString}}</text>
 		</view>
+		<uni-calendar ref="calendar" class="uni-calendar--hook" :clear-date="true" :date="info.date" :insert="info.insert"  :startDate="info.startDate" :endDate="info.endDate" :showMonth="false" @confirm="confirm" @close="close" />
 
 		<view class="cal-content">
 			<view class="cal-ul cal-weeks">
@@ -11,11 +12,13 @@
 				</view>
 			</view>
 
-			<swiper :current="current" ref="calSwiper" class="cal-swiper" :duration="200" circular @animationfinish="swiperFisnish">
+			<swiper :current="current" ref="calSwiper" class="cal-swiper" :duration="200" circular
+				@animationfinish="swiperFisnish">
 				<swiper-item v-for="(days,i) of weeks" :key="i">
 					<view class="cal-ul cal-days">
 						<view class="cal-li" v-for="(item,j) of days" :key="j" @click="changeSelected(item)">
-							<view class="cal-day-li" :class="{'cal-day-li-selected':item.timeSpan == baseData.selectedDate.timeSpan}">
+							<view class="cal-day-li"
+								:class="{'cal-day-li-selected':item.timeSpan == baseData.selectedDate.timeSpan}">
 								<text>{{item.d}}</text>
 							</view>
 						</view>
@@ -37,6 +40,29 @@
 	 * @event {Function} changeDate 当前选中日期发生改变
 	 * @example <chenmushan-week-calendar @changeDate="changeDate"></chenmushan-week-calendar>
 	 */
+	
+	function getDate(date, AddDayCount = 0) {
+		if (!date) {
+			date = new Date()
+		}
+		if (typeof date !== 'object') {
+			date = date.replace(/-/g, '/')
+		}
+		const dd = new Date(date)
+
+		dd.setDate(dd.getDate() + AddDayCount) // 获取AddDayCount天后的日期
+
+		const y = dd.getFullYear()
+		const m = dd.getMonth() + 1 < 10 ? '0' + (dd.getMonth() + 1) : dd.getMonth() + 1 // 获取当前月份的日期，不足10补0
+		const d = dd.getDate() < 10 ? '0' + dd.getDate() : dd.getDate() // 获取当前几号，不足10补0
+		return {
+			fullDate: y + '-' + m + '-' + d,
+			year: y,
+			month: m,
+			date: d,
+			day: dd.getDay()
+		}
+	}
 	export default {
 		props: {
 			defaultDate: {
@@ -57,6 +83,11 @@
 						ym: '', // 年月拼接
 						timeSpan: 0, // 时间戳
 					}
+				},
+				showCalendar: false,
+				info: {
+					range: true,
+					selected: []
 				}
 			};
 		},
@@ -64,16 +95,50 @@
 			this.propDate = this.defaultDate == 0 ? new Date() : new Date(this.defaultDate);
 			this.initData();
 		},
+		
 		methods: {
+			open() {
+				this.$refs.calendar.open()
+			},
+			close() {
+				console.log('弹窗关闭');
+			},
+			confirm(e) {
+				console.log('confirm 返回:', e)
+				var time = new Date(e.fulldate).getTime();
+				if (this.baseData.selectedDate.timeSpan != time) {
+					this.$set(this.baseData, 'selectedDate', {
+						d:e.date,
+						m: new Date(time),
+						timeSpan: time,
+						ym: e.fulldate
+					});
+				
+					this.$emit('changeDate', this.baseData.selectedDate);
+				}
+				console.log("baseDate1",this.baseData)
+				let lastSat =  this.baseData.selectedDate.m; 
+
+				while (lastSat.getDay() != 6) lastSat.setDate(lastSat.getDate() + 1);
+				
+				this.$set(this.weeks, 0, this.getWeekDaysByLastSat(lastSat));
+				this.$set(this.weeks, 1, this.getWeekDaysByWeeks(this.weeks[0], true));
+				this.$set(this.weeks, 2, this.getWeekDaysByWeeks(this.weeks[0], false));
+				console.log('weeks1',this.weeks)
+				this.current = 0;
+			},
+			
 			initData() {
 				let lastSat = new Date(this.propDate);
-				let month = lastSat.getMonth()+1<10 ? "0"+(lastSat.getMonth()+1) : lastSat.getMonth()+1
+				console.log('lastSat',lastSat)
+				let month = lastSat.getMonth() + 1 < 10 ? "0" + (lastSat.getMonth() + 1) : lastSat.getMonth() + 1
 				this.$set(this.baseData, 'selectedDate', {
 					d: lastSat.getDate(),
 					ym: `${lastSat.getFullYear()}-${month}-${lastSat.getDate()}`,
 					timeSpan: +lastSat,
 					m: new Date(lastSat)
 				});
+				console.log("baseDate2",this.baseData)
 
 				// 寻找到距离当前日期最近的周六
 				while (lastSat.getDay() != 6) lastSat.setDate(lastSat.getDate() + 1);
@@ -81,7 +146,7 @@
 				this.$set(this.weeks, 0, this.getWeekDaysByLastSat(lastSat));
 				this.$set(this.weeks, 1, this.getWeekDaysByWeeks(this.weeks[0], true));
 				this.$set(this.weeks, 2, this.getWeekDaysByWeeks(this.weeks[0], false));
-				//console.log(this.weeks)
+				console.log('weeks2',this.weeks)
 				this.current = 0;
 			},
 			swiperFisnish(e) {
@@ -98,16 +163,16 @@
 			},
 			// 通过周六数据获取一周的数据
 			getWeekDaysByLastSat(lastSat) {
-
 				lastSat = new Date(lastSat);
 				let reuslt = [];
-				let month = lastSat.getMonth()+1<10 ? "0"+(lastSat.getMonth()+1) : lastSat.getMonth()+1
+				let month = lastSat.getMonth() + 1 < 10 ? "0" + (lastSat.getMonth() + 1) : lastSat.getMonth() + 1
 				for (var i = 0; i < 7; i++) {
 					reuslt.push({
 						d: lastSat.getDate(),
 						ym: `${lastSat.getFullYear()}-${month}-${lastSat.getDate()}`,
 						timeSpan: +lastSat,
-						m: new Date(lastSat)
+						//m: new Date(lastSat)
+						m: this.baseData.selectedDate.m
 					});
 
 					lastSat.setDate(lastSat.getDate() - 1)
@@ -141,12 +206,18 @@
 
 					this.$emit('changeDate', this.baseData.selectedDate);
 				}
+				console.log("baseDate3",this.baseData)
+				
 			}
 		},
 		computed: {
 			nowSelectDateString() {
-				let m = this.baseData.selectedDate.m;
-				return m ? `${m.getFullYear()}年${m.getMonth() + 1 }月${m.getDate()}日` : '';
+				let ym = this.baseData.selectedDate.ym
+				console.log('ym',ym)
+				return ym
+				// let m = this.baseData.selectedDate.m;
+				// console.log('m',m)
+				// return m ? `${m.getFullYear()}年${m.getMonth() + 1 }月${m.getDate()}日` : '';
 			}
 		},
 		watch: {
@@ -162,9 +233,16 @@
 </script>
 
 <style lang="scss" scoped>
-	view{
+	view {
 		line-height: 1.8;
 	}
+
+	.calendar-button {
+		flex: 1;
+		font-weight: bold;
+		font-size: 32rpx;
+	}
+
 	.cal {
 		width: 100%;
 		height: 254rpx;
@@ -172,7 +250,7 @@
 		margin: 0 auto;
 		overflow: hidden;
 		position: fixed;
-		padding-bottom:40rpx;
+		padding-bottom: 40rpx;
 		z-index: 999;
 	}
 

@@ -4,7 +4,7 @@
 			<view class="form">
 				<view class="form-item">
 					<view class="title">标题</view>
-					<input placeholder="请输入小模块标题" class="input" v-model="name" />
+					<input placeholder="请输入模块标题" class="input" v-model="name" />
 				</view>
 				<view class="form-item">
 					<view class="title">负责人</view>

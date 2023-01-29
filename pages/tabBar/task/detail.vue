@@ -6,9 +6,10 @@
 				<view class="input">{{name}}</view>
 			</view>
 			<view class="form-item">
-				<view class="title">完成时间</view>
-				<view class="input">{{end_at}}</view>
+				<view class="title">任务时间</view>
+				<view class="input">{{start_at}} 至 {{end_at}}</view>
 			</view>
+			
 			<view class="form-item">
 				<view class="title">所属项目</view>
 				<view class="input">{{module}}</view>
@@ -40,6 +41,7 @@
 		data() {
 			return {
 				name:'',
+				start_at:'',
 				end_at:'',
 				module:'',
 				level:'',
@@ -58,7 +60,7 @@
 				console.log(res.data.data)
 				this.name = res.data.data.name,
 				this.module=res.data.data.module.name,
-				
+				this.start_at = res.data.data.start_at,
 				this.end_at=res.data.data.end_at,
 				this.creator=res.data.data.creator.name
 				if(res.data.data.remark==''){

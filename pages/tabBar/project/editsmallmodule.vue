@@ -4,8 +4,8 @@
 			<view class="form">
 				<view class="form-item">
 					<view class="moduletitle">
-						项目小模块
-						<uni-icons type="plus" size="24" color="#999" class="right pt4" @tap="NewSmallModule"></uni-icons>
+						项目模块
+						<!-- <uni-icons type="plus" size="24" color="#999" class="right pt4" @tap="NewSmallModule"></uni-icons> -->
 					</view>
 					<view class="form-list" v-for="item in smallmodulelist" :key="item.id">
 						<view class="form-list-item" @tap="EditSmallModuleDetail(item)">

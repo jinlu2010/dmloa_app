@@ -145,17 +145,32 @@
 	margin-left: 60rpx;
 	background-color: #e5e5e5;
 }
-
+/* .listheight::after{
+	position: absolute;
+	height: 1rpx;
+	content: '';
+	bottom: 0;
+	right: 0;
+	left: 0;
+	margin-left: 60rpx;
+	background-color: #e5e5e5;
+} */
 
 .list-item-content:hover{
 	background-color: #f8f8f8;
 }
 
 
-.list-item-content:nth-last-child(1)::after {
+/* .list-item-content:nth-last-child(1)::after {
 	height: 0rpx;
 }
 
+.listheight:nth-last-child(1)::after {
+	height: 0rpx;
+} */
+.mt10{
+	margin-top:10rpx
+}
 
 .usercenterlist-container image{
 	width: 40rpx;

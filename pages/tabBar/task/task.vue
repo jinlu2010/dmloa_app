@@ -27,26 +27,35 @@
 					<text class="nonetask">今天没有安排任务哦~</text>
 					<text class="nonetask">休息一下吧！</text>
 				</view>
-				<view class="list-item-content pr60 pt20 listheight" v-for="item in tasklist" :key="item.id" @tap="Detail(item)">
-					<view class="list-content-left">
-						<!-- <view class="dot">
-							<view class="urgent"></view>
-							<view class="full"></view>
-						</view> -->
-						<text class="title">{{item.name}}</text>
-						<text class="note">From {{item.creator.name}} 逾期{{getGraceDateBeforeNow(item.end_at)}}</text>
-					</view>
-					<!-- <view class="list-content-right" v-if="item.task_items[this.taskItemId].finished == false && item.task_items[this.taskItemId].stopped == false">
-						<button class="btngreen" @tap.stop="tapshow(item)">进行中</button>
-					</view>
-					<view class="list-content-right">
-						<image :src="item.task_items[this.taskItemId].stopped == true ? '../../../static/image/icon06.png': item.task_items[this.taskItemId].finished == true ? '../../../static/image/icon05.png':''"></image>
-					</view> -->
-					<view class="list-content-right" v-for="items in item.task_items" :key="items.id">
-						<button class="btngreen" v-show="items.operator.id != userid ? false : items.finished == false && items.stopped == false ? true : false" @tap.stop="tapshow(items)">进行中</button>
-						<image :src="items.stopped == true ? '../../../static/image/icon06.png': items.finished == true ? '../../../static/image/icon05.png':''" v-show="items.operator.id != userid ? false : items.finished == false && items.stopped == false ? false : true"></image>
+				<view v-for="item in tasklist" :key="item.id" @tap="Detail(item)">
+					<view class="list-item-content" v-for="items in item.task_items" :key="items.id" v-if="items.operator.id == userid" :class="[nowdate > item.end_at && items.finished == false ? 'bgred': null]">
+						<view class="pr60 listheight" >
+							<view class="list-content-left">
+								<!-- <view class="dot">
+									<view class="urgent"></view>
+									<view class="full"></view>
+								</view> -->
+								<text class="title" :class="[nowdate > item.end_at && items.finished == false ? 'red': null]">{{item.name}}</text>
+								<text class="note" v-if="items.finished == true">From {{item.creator.name}} {{items.doneAt}}完成</text>
+								<text class="note" v-if="nowdate < item.end_at && items.finished == false">From {{item.creator.name}} 截止{{item.end_at.slice(5,10)}}</text>
+								<text class="note" v-if="nowdate == item.end_at && items.finished == false">From {{item.creator.name}} 今日完成</text>
+								<text class="note" v-if="nowdate > item.end_at && items.finished == false">From {{item.creator.name}} 逾期{{getGraceDateBeforeNow(item.end_at)}}</text>
+							</view>
+							<!-- <view class="list-content-right" v-if="item.task_items[this.taskItemId].finished == false && item.task_items[this.taskItemId].stopped == false">
+								<button class="btngreen" @tap.stop="tapshow(item)">进行中</button>
+							</view>
+							<view class="list-content-right">
+								<image :src="item.task_items[this.taskItemId].stopped == true ? '../../../static/image/icon06.png': item.task_items[this.taskItemId].finished == true ? '../../../static/image/icon05.png':''"></image>
+							</view> -->
+							<view class="list-content-right">
+								<button class="btngreen" v-show="items.finished == false && items.stopped == false ? true : false" @tap.stop="tapshow(items)">进行中</button>
+								<image :src="items.stopped == true ? '../../../static/image/icon06.png': items.finished == true ? '../../../static/image/icon05.png':''" v-show="items.finished == false && items.stopped == false ? false : true"></image>
+							</view>
+						</view>
+					
 					</view>
 				</view>
+				
 			</view>
 
 			<!-- <view class="list-item-container" >
@@ -147,7 +156,7 @@
 	import calendar from '@/components/calendar/calendar.vue'
 
 	function getDateBeforeNow(stringTime) {
-		console.log("传参未格式化", stringTime);
+		//console.log("传参未格式化", stringTime);
 		stringTime = new Date(stringTime.replace(/-/g, '/'))
 	
 		// 统一单位换算
@@ -164,31 +173,31 @@
 		// 对时间进行毫秒单位转换
 		var time2 = new Date(stringTime).getTime(); //指定时间的时间戳
 	
-		console.log("传过来的时间", time2);
+		//console.log("传过来的时间", time2);
 	
 		var time = time1 - time2;
-		console.log("计算后的时间", time);
+		//console.log("计算后的时间", time);
 	
 		var result = null;
 		if (time < 0) {
 		// alert("设置的时间不能早于当前时间！");
 			result = stringTime;
 		} else if (time / year >= 1) {
-			result = parseInt(time / year) + "年前";
+			result = parseInt(time / year) + "年";
 		} else if (time / month >= 1) {
-			result = parseInt(time / month) + "月前";
+			result = parseInt(time / month) + "月";
 		} else if (time / week >= 1) {
-			result = parseInt(time / week) + "周前";
+			result = parseInt(time / week) + "周";
 		} else if (time / day >= 1) {
-			result = parseInt(time / day) + "天前";
+			result = parseInt(time / day) + "天";
 		} else if (time / hour >= 1) {
-			result = parseInt(time / hour) + "小时前";
+			result = parseInt(time / hour) + "小时";
 		} else if (time / minute >= 1) {
-			result = parseInt(time / minute) + "分钟前";
+			result = parseInt(time / minute) + "分钟";
 		} else {
 			result = "刚刚";
 		}
-		console.log("格式化后的时间", result);
+		//console.log("格式化后的时间", result);
 		return result;
 	}
 
@@ -231,10 +240,7 @@
 				windowHeight: 0,
 				dateWidth: '',
 				dateHeight: '',
-				
-				getDateBeforeNow:getDateBeforeNow('2022-12-10'),
-				
-				
+
 				date: getDate({
 					format: true
 				}),
@@ -278,7 +284,8 @@
 				taskItemArr:[],
 				taskItemId:0,
 				true:true,
-				false:false
+				false:false,
+				nowdate:new Date().toISOString().slice(0, 10),
 			}
 		},
 		onShow() {
@@ -319,8 +326,6 @@
 			getGraceDateBeforeNow(date){
 				return getDateBeforeNow(date)
 			},
-			// 时间格式化时间为：刚刚、多少分钟前、多少天前
-			//stringTime 2020-09-10 20:20:20
 			
 			reload() {
 				const pages = getCurrentPages()
@@ -536,6 +541,15 @@
 		background-color: #FFFFFF;
 	}
 
+	.bgred{
+		background-color: #FFF5F5;
+	}
+	.red{
+		color: #b92c2c;
+	}
+	label{
+		color: #b92c2c;
+	}
 	/* .button {
 		width: 130rpx;
 		height: 70rpx;
