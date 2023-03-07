@@ -5,7 +5,7 @@
 .bgcalendar{
 	position: fixed;
 	width: 100%;
-	height: 350rpx;
+	height: 800rpx;
 	background-color: #004343;
 	color: white;
 	text-align: center;
@@ -88,7 +88,7 @@
 }
 
 .task {
-	margin-top: 300rpx;
+	/* margin-top: 300rpx; */
 	z-index: 11;
 	position: absolute;
 	width: 100%;

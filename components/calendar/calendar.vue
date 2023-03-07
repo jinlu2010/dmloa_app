@@ -1,325 +1,504 @@
 <template>
-	<view class="cal">
-		<view class="cal-top">
-			<text ref="t1" @click="open">{{nowSelectDateString}}</text>
-		</view>
-		<uni-calendar ref="calendar" class="uni-calendar--hook" :clear-date="true" :date="info.date" :insert="info.insert"  :startDate="info.startDate" :endDate="info.endDate" :showMonth="false" @confirm="confirm" @close="close" />
+  <div class="calendar-wrapper">
+    <!-- 月份变换区 -->
+    <div class="header rowJcAc" v-if="headerBar">
+      <div class="arrowIcon rowJcAc" @click="changeMonth('pre')" v-if="monthOpen">
+        <van-icon name="arrow-left" color="#9EA8BA" size="12px"/>
+      </div>
+      
+      <!-- <div class="pre " @click="changeMonth('pre')">上个月</div> -->
+      <div class="yearMonth">{{y+'-'+formatNum(m)}}</div>
+      <div class="arrowIcon rowJcAc" @click="changeMonth('next')" v-if="monthOpen">
+        <van-icon name="arrow" color="#9EA8BA" size="12px"/>
+      </div>
+      <!-- <div class="next" @click="changeMonth('next')">下个月</div> -->
+    </div>
 
-		<view class="cal-content">
-			<view class="cal-ul cal-weeks">
-				<view class="cal-li" v-for="(item,i) of baseData.weekTitles" :key="i">
-					<text>{{item}}</text>
-				</view>
-			</view>
+    <!-- 星期区 -->
+    <div class="week">
+      <div class="week-day" v-for="(item,index) in weekDay" :key="index">{{item}}</div>
+    </div>
 
-			<swiper :current="current" ref="calSwiper" class="cal-swiper" :duration="200" circular
-				@animationfinish="swiperFisnish">
-				<swiper-item v-for="(days,i) of weeks" :key="i">
-					<view class="cal-ul cal-days">
-						<view class="cal-li" v-for="(item,j) of days" :key="j" @click="changeSelected(item)">
-							<view class="cal-day-li"
-								:class="{'cal-day-li-selected':item.timeSpan == baseData.selectedDate.timeSpan}">
-								<text>{{item.d}}</text>
-							</view>
-						</view>
-					</view>
-				</swiper-item>
-			</swiper>
-		</view>
-
-		<!-- <pgb-tabbar ref="t2"></pgb-tabbar> -->
-	</view>
+    <!-- 日历显示区 -->
+    <div :class="{hide : !monthOpen}" class="content">
+      <div :style="{top:positionTop + 'px'}" class="days">
+        <div class="item rowJcAc" v-for="(item,index) in dates" :key="index">
+          <div
+            class="day"
+            @click="selectOne(item,$event)"
+            :class="{
+              choose:choose==`${item.year}-${item.month}-${item.date}`,
+              todayChoose: isTodayChoose(item.year,item.month,item.date) ,
+              nolm:!item.isCurM,
+              today:isToday(item.year,item.month,item.date),
+          }"
+          >
+          <div class="markDay" v-if="isMarkDay(item.year,item.month,item.date)" 
+          :class="[choose==`${item.year}-${item.month}-${item.date}` ? 'markDayChoose':'markDayNoChoose']"></div>
+          {{Number(item.date)}}</div>
+          
+        </div>
+      </div>
+    </div>
+    <!-- 伸缩按钮：待定 -->
+    <div class="bottomLine rowJcAc" v-if="collapsible" @click="toggle">
+      <div></div>
+    </div>
+    <!-- 伸缩按钮：待定 -->
+   <!-- <img
+      src="https://i.loli.net/2020/07/16/2MmZsucVTlRjSwK.png"
+      mode="scaleToFill"
+      v-if="collapsible"
+      @click="toggle"
+      class="weektoggle"
+      :class="{ down: monthOpen }"
+    /> -->
+  </div>
 </template>
 
 <script>
-	/**
-	 * weekCalendar 周日历选择组件
-	 * @description 日历选择某一天的组件
-	 * @bug 因是使用swiper组件开发快速滑动多屏 无法触发 @animationfinish 导致展示异常
-	 * @property {Number} defaultDate 默认时间时间戳
-	 * @event {Function} changeDate 当前选中日期发生改变
-	 * @example <chenmushan-week-calendar @changeDate="changeDate"></chenmushan-week-calendar>
-	 */
-	
-	function getDate(date, AddDayCount = 0) {
-		if (!date) {
-			date = new Date()
-		}
-		if (typeof date !== 'object') {
-			date = date.replace(/-/g, '/')
-		}
-		const dd = new Date(date)
+export default {
+  name: "ren-calendar",
+  props: {
+    // 星期几为第一天(0为星期日)
+    weekstart: {
+      type: Number,
+      default: 0,
+    },
+    // 标记的日期
+    markDays: {
+      type: Array,
+      default: () => {
+        return [];
+      },
+    },
+    //是否展示月份切换按钮
+    headerBar: {
+      type: Boolean,
+      default: true,
+    },
+    // 是否展开
+    open: {
+      type: Boolean,
+      default: true,
+    },
+    //是否可收缩
+    collapsible: {
+      type: Boolean,
+      default: true,
+    },
+    //未来日期是否不可点击
+    disabledAfter: {
+      type: Boolean,
+      default: false,
+    },
+    // 默认选中日期
+    selectDate: {
+      type: String,
+      default: null
+    }
+  },
+  data() {
+    return {
+      weektext: ["日", "一", "二", "三", "四", "五", "六"],
+      y: new Date().getFullYear(), // 年
+      m: new Date().getMonth() + 1, // 月
+      dates: [], // 当前月的日期数据
+      positionTop: 0,
+      monthOpen: true,
+      choose: "",
+      isCurM: true,
+    };
+  },
+  created() {
+    this.dates = this.monthDay(this.y, this.m);
+    // !this.open && this.toggle();
+  },
+  watch: {
+    // 点击返回今天
+    selectDate() {
+      if(this.selectDate) {
+        this.choose = this.selectDate
+        this.y = Number(this.selectDate.split('-')[0])
+        this.m = Number(this.selectDate.split('-')[1])
+        this.dates = this.monthDay(this.y, this.m);
+        if(!this.monthOpen) {
+          let index = -1;
+          this.dates.forEach((i, x) => {
+            this.isChoose(i.year, i.month, i.date) && (index = x);
+          });
+          this.positionTop = -((Math.ceil((index + 1) / 7) || 1) - 1) * 42;
+        }
+      }
+      
+      
+    },
+    m() {
+      this.$emit('changeMonth',{year: this.y,month: this.m})
+    },
+    dates() {
+      this.$emit('changeDate',{dates: this.dates})
+    }
+  },
+  mounted() {
+    if(this.selectDate) {
+      this.choose = this.selectDate
+      this.y = this.selectDate.split('-')[0]
+      this.m = this.selectDate.split('-')[1]
+    }else {
+      this.choose = this.getToday().date;
+    }
+    this.toggle()
+    
+  },
+  computed: {
+    // 顶部星期栏
+    weekDay() {
+      return this.weektext
+        .slice(this.weekstart)
+        .concat(this.weektext.slice(0, this.weekstart));
+    },
+  },
+  methods: {
+    formatNum(num) {
+      let res = Number(num);
+      return res < 10 ? "0" + res : res;
+    },
+    getToday() {
+      let date = new Date();
+      let y = date.getFullYear();
+      let m = date.getMonth();
+      let d = date.getDate();
+      let week = new Date().getDay();
+      let weekText = ["日", "一", "二", "三", "四", "五", "六"];
+      let formatWeek = "星期" + weekText[week];
+      let today = {
+        date: y + "-" + this.formatNum(m + 1) + "-" + this.formatNum(d),
+        week: formatWeek,
+      };
+      return today;
+    },
+    // 获取当前月份数据
+    monthDay(y, month) {
+      let dates = [];
+      let m = Number(month);
+      let firstDayOfMonth = new Date(y, m - 1, 1).getDay(); // 当月第一天星期几
+      let lastDateOfMonth = new Date(y, m, 0).getDate(); // 当月最后一天
+      let lastDayOfLastMonth = new Date(y, m-1, 0).getDate(); // 上一月的最后一天
+      let weekstart = this.weekstart == 7 ? 0 : this.weekstart;
+      let startDay = (() => {
+        // 周初有几天是上个月的
+        if (firstDayOfMonth == weekstart) {
+          return 0;
+        } else if (firstDayOfMonth > weekstart) {
+          return firstDayOfMonth - weekstart;
+        } else {
+          return 7 - weekstart + firstDayOfMonth;
+        }
+      })();
+      let endDay = 7 - ((startDay + lastDateOfMonth) % 7); // 结束还有几天是下个月的
+      for (let i = 1; i <= startDay; i++) {
+        dates.push({
+          date: this.formatNum(lastDayOfLastMonth - startDay + i),
+          day: weekstart + i - 1 || 7,
+          month: m - 1 >= 1 ? this.formatNum(m - 1) : 12,
+          year: m - 1 >= 1 ? y : y - 1,
+          isCurM: false
+        });
+      }
+      for (let j = 1; j <= lastDateOfMonth; j++) {
+        dates.push({
+          date: this.formatNum(j),
+          day: (j % 7) + firstDayOfMonth - 1 || 7,
+          month: this.formatNum(m),
+          year: y,
+          isCurM: true, //是否当前月份
+        });
+      }
+      for (let k = 1; k <= endDay; k++) {
+        dates.push({
+          date: this.formatNum(k),
+          day: (lastDateOfMonth + startDay + weekstart + k - 1) % 7 || 7,
+          month: m + 1 <= 12 ? this.formatNum(m + 1) : 1,
+          year: m + 1 <= 12 ? y : y + 1,
+          isCurM: false
+        });
+      }
+      // console.log(dates);
+      return dates;
+    },
+    isFutureDay(y, m, d) {
+      //是否未来日期
+      let ymd = `${y}/${m}/${d}`;
+      let formatDY = new Date(ymd.replace(/-/g, "/"));
+      let showTime = formatDY.getTime();
+      let curTime = new Date().getTime();
+      if (showTime > curTime) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    // 标记日期
+    isMarkDay(y, m, d) {
+      let flag = false;
+      for (let i = 0; i < this.markDays.length; i++) {
+        let dy = `${y}-${m}-${d}`;
+        if (this.markDays[i] == dy) {
+          flag = true;
+          break;
+        }
+      }
+      return flag;
+    },
+    isToday(y, m, d) {
+      let checkD = y + "-" + m + "-" + d;
+      let today = this.getToday().date;
+      if (checkD == today) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    isTodayChoose(year,month,day) {
+      let checkD = year + "-" + month + "-" + day;
+      let today = this.getToday().date;
+      return this.choose == `${year}-${month}-${day}` && checkD == today
+    },
+    isChoose(y,m,d) {
+      let checkD = y + "-" + m + "-" + d;
+      return this.choose == checkD
+    },
+    // 展开收起
+    toggle() {
+      this.monthOpen = !this.monthOpen;
+      if (this.monthOpen) {
+        this.positionTop = 0;
+      } else {
+        let index = -1;
+        this.dates.forEach((i, x) => {
+          this.isChoose(i.year, i.month, i.date) && (index = x);
+        });
+        this.positionTop = -((Math.ceil((index + 1) / 7) || 1) - 1) * 42;
+      }
+    },
+    // 点击回调
+    selectOne(i) {
+      let markDay = this.isMarkDay(i.year, i.month, i.date);
+      let date = `${i.year}-${i.month}-${i.date}`;
+      let selectD = new Date(date).getTime();
+      let curTime = new Date().getTime();
+      let week = new Date(date).getDay();
+      let weekText = ["日", "一", "二", "三", "四", "五", "六"];
+      let formatWeek = "星期" + weekText[week];
+      let response = {
+        date: date,
+        week: formatWeek,
+      };
+      // if (!i.isCurM) {
+      //   // console.log('不在当前月范围内');
+      //   return false;
+      // }
+      if (selectD > curTime) {
+        if (this.disabledAfter) {
+          console.log("未来日期不可选");
 
-		dd.setDate(dd.getDate() + AddDayCount) // 获取AddDayCount天后的日期
+          return false;
+        } else {
+          this.choose = date;
+          if (markDay && i.isCurM) {
+            this.$emit("onDayClick", response);
+          }
+        }
+      } else {
+        this.choose = date;
+        if (i.isCurM) {
+          this.$emit("onDayClick", response);
+        }else {
+          this.y = i.year
+          this.m = i.month
+          this.dates = this.monthDay(this.y, this.m);
+          this.$emit("onDayClick", response);
+        }
+      }
+      this.$emit("setDate", response);
+      //   console.log(response);
+    },
+    //改变年月
+    changYearMonth(y, m) {
+      this.dates = this.monthDay(y, m);
+      this.y = y;
+      this.m = m;
+    },
+    changeMonth(type) {
+      this.y = parseInt(this.y)
+      this.m = parseInt(this.m)
+      if (type == "pre") {
 
-		const y = dd.getFullYear()
-		const m = dd.getMonth() + 1 < 10 ? '0' + (dd.getMonth() + 1) : dd.getMonth() + 1 // 获取当前月份的日期，不足10补0
-		const d = dd.getDate() < 10 ? '0' + dd.getDate() : dd.getDate() // 获取当前几号，不足10补0
-		return {
-			fullDate: y + '-' + m + '-' + d,
-			year: y,
-			month: m,
-			date: d,
-			day: dd.getDay()
-		}
-	}
-	export default {
-		props: {
-			defaultDate: {
-				type: Number,
-				default: 0
-			}
-		},
-		data() {
-			return {
-				weeks: [],
-				propDate: null,
-				current: 0,
-				baseData: {
-					weekTitles: ['日', '一', '二', '三', '四', '五', '六'],
-					current: 0,
-					selectedDate: {
-						d: null, // 在当前月份中的天
-						ym: '', // 年月拼接
-						timeSpan: 0, // 时间戳
-					}
-				},
-				showCalendar: false,
-				info: {
-					range: true,
-					selected: []
-				}
-			};
-		},
-		mounted() {
-			this.propDate = this.defaultDate == 0 ? new Date() : new Date(this.defaultDate);
-			this.initData();
-		},
-		
-		methods: {
-			open() {
-				this.$refs.calendar.open()
-			},
-			close() {
-				console.log('弹窗关闭');
-			},
-			confirm(e) {
-				console.log('confirm 返回:', e)
-				var time = new Date(e.fulldate).getTime();
-				if (this.baseData.selectedDate.timeSpan != time) {
-					this.$set(this.baseData, 'selectedDate', {
-						d:e.date,
-						m: new Date(time),
-						timeSpan: time,
-						ym: e.fulldate
-					});
-				
-					this.$emit('changeDate', this.baseData.selectedDate);
-				}
-				console.log("baseDate1",this.baseData)
-				let lastSat =  this.baseData.selectedDate.m; 
-
-				while (lastSat.getDay() != 6) lastSat.setDate(lastSat.getDate() + 1);
-				
-				this.$set(this.weeks, 0, this.getWeekDaysByLastSat(lastSat));
-				this.$set(this.weeks, 1, this.getWeekDaysByWeeks(this.weeks[0], true));
-				this.$set(this.weeks, 2, this.getWeekDaysByWeeks(this.weeks[0], false));
-				console.log('weeks1',this.weeks)
-				this.current = 0;
-			},
-			
-			initData() {
-				let lastSat = new Date(this.propDate);
-				console.log('lastSat',lastSat)
-				let month = lastSat.getMonth() + 1 < 10 ? "0" + (lastSat.getMonth() + 1) : lastSat.getMonth() + 1
-				this.$set(this.baseData, 'selectedDate', {
-					d: lastSat.getDate(),
-					ym: `${lastSat.getFullYear()}-${month}-${lastSat.getDate()}`,
-					timeSpan: +lastSat,
-					m: new Date(lastSat)
-				});
-				console.log("baseDate2",this.baseData)
-
-				// 寻找到距离当前日期最近的周六
-				while (lastSat.getDay() != 6) lastSat.setDate(lastSat.getDate() + 1);
-
-				this.$set(this.weeks, 0, this.getWeekDaysByLastSat(lastSat));
-				this.$set(this.weeks, 1, this.getWeekDaysByWeeks(this.weeks[0], true));
-				this.$set(this.weeks, 2, this.getWeekDaysByWeeks(this.weeks[0], false));
-				console.log('weeks2',this.weeks)
-				this.current = 0;
-			},
-			swiperFisnish(e) {
-				let current = e.detail.current;
-				this.changeWeeks(current > this.baseData.current, current);
-				this.$set(this.baseData, 'upCurrIndex', current);
-			},
-			changeWeeks(direction, current) {
-				console.log(current)
-				let nextIndex = current + 1 > 2 ? 0 : current + 1;
-				let prevIndex = current - 1 < 0 ? 2 : current - 1;
-				this.$set(this.weeks, nextIndex, this.getWeekDaysByWeeks(this.weeks[current], true));
-				this.$set(this.weeks, prevIndex, this.getWeekDaysByWeeks(this.weeks[current], false));
-			},
-			// 通过周六数据获取一周的数据
-			getWeekDaysByLastSat(lastSat) {
-				lastSat = new Date(lastSat);
-				let reuslt = [];
-				let month = lastSat.getMonth() + 1 < 10 ? "0" + (lastSat.getMonth() + 1) : lastSat.getMonth() + 1
-				for (var i = 0; i < 7; i++) {
-					reuslt.push({
-						d: lastSat.getDate(),
-						ym: `${lastSat.getFullYear()}-${month}-${lastSat.getDate()}`,
-						timeSpan: +lastSat,
-						//m: new Date(lastSat)
-						m: this.baseData.selectedDate.m
-					});
-
-					lastSat.setDate(lastSat.getDate() - 1)
-				}
-
-				return reuslt.reverse();
-			},
-			// 通过一周的数据获取本周的上周或下周
-			getWeekDaysByWeeks(weeks, direction) {
-				// 下周
-				if (direction) {
-					let nextLastSat = new Date(weeks[weeks.length - 1].timeSpan);
-					nextLastSat.setDate(nextLastSat.getDate() + 7);
-					return this.getWeekDaysByLastSat(nextLastSat)
-				}
-				// 上周
-				else {
-					let prevLstSat = new Date(weeks[0].timeSpan);
-					prevLstSat.setDate(prevLstSat.getDate() - 1);
-					return this.getWeekDaysByLastSat(prevLstSat)
-				}
-			},
-			// 修改当前选中
-			changeSelected(item) {
-				console.log('item::', item);
-				if (this.baseData.selectedDate.timeSpan != item.timeSpan) {
-					this.$set(this.baseData, 'selectedDate', {
-						...item,
-						m: new Date(item.timeSpan)
-					});
-
-					this.$emit('changeDate', this.baseData.selectedDate);
-				}
-				console.log("baseDate3",this.baseData)
-				
-			}
-		},
-		computed: {
-			nowSelectDateString() {
-				let ym = this.baseData.selectedDate.ym
-				console.log('ym',ym)
-				return ym
-				// let m = this.baseData.selectedDate.m;
-				// console.log('m',m)
-				// return m ? `${m.getFullYear()}年${m.getMonth() + 1 }月${m.getDate()}日` : '';
-			}
-		},
-		watch: {
-			defaultDate: {
-				handler(newVal, oldVal) {
-					this.propDate = this.defaultDate == 0 ? new Date() : new Date(this.defaultDate);
-					this.initData();
-				},
-				immediate: true
-			}
-		},
-	}
+        if (this.m + 1 == 2) {
+          this.m = 12;
+          this.y = parseInt(this.y) - 1;
+        } else {
+          this.m = this.m - 1;
+        }
+      } else {
+        if (this.m + 1 == 13) {
+          this.m = 1;
+          this.y = this.y + 1;
+        } else {
+          this.m = this.m + 1;
+        }
+      }
+      this.dates = this.monthDay(this.y, this.m);
+      // this.$emit("changeMonth");
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-	view {
-		line-height: 1.8;
-	}
+.bottomLine {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 50%;
+  margin-left: -16px;
+  >div {
+    width: 32px;
+    height: 3px;
+    background: #DADEF0;
+    border-radius: 2px;
+  }
+}
+.nolm {
+  color: #002424 !important;
+}
+.calendar-wrapper {
+  text-align: center;
+  background-color: #004343;
+  // box-shadow: 0px 6px 10px 0px rgba(131,134,163,0.12);
+  border-radius: 0px 0px 20px 20px;
+  position: relative;
+  .header {
+    .yearMonth {
+      font-size: 16px;
+      line-height: 23px;
+      color: #FFFFFF;
+      margin: 0 32px;
+	  padding-top: 10px;
+    }
+  }
 
-	.calendar-button {
-		flex: 1;
-		font-weight: bold;
-		font-size: 32rpx;
-	}
+  .week {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    align-items: center;
+    height: 19px;
+    line-height: 19px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 10px;
+    color: #00696a;
+  }
 
-	.cal {
-		width: 100%;
-		height: 254rpx;
-		background: #004343;
-		margin: 0 auto;
-		overflow: hidden;
-		position: fixed;
-		padding-bottom: 40rpx;
-		z-index: 999;
-	}
+  .content {
+    position: relative;
+    overflow: hidden;
+    transition: height 0.4s ease;
 
-	.cal-top {
-		width: 100%;
-		height: 91rpx;
-		background: #004343;
-		border-radius: 30rpx 30rpx 0rpx 0rpx;
-		line-height: 91rpx;
-		text-align: center;
+    .days {
+      transition: top 0, 3s;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      position: relative;
+      font-size: 14px;
+      line-height: 19px;
+	  color: #FFFFFF;
 
-		text {
-			font-size: 34rpx;
-			font-family: PingFang SC, PingFang SC-Bold;
-			font-weight: 700;
-			color: #ffffff;
-		}
-	}
+      .item {
+        position: relative;
+        display: block;
+        height: 42px;
+        line-height: 42px;
+        width: calc(100% / 7);
 
-	.cal-content {
-		padding: 0 0 40rpx;
-		line-height: 1 !important;
-	}
+        .day {
+          font-style: normal;
+          display: inline-block;
+          position: relative;
+          vertical-align: middle;
+          width: 36px;
+          font-weight: 500;
+          height: 36px;
+          line-height: 36px;
+          overflow: hidden;
+          border-radius: 50%;
 
-	.cal-swiper {
-		margin-top: 20rpx;
-	}
+          &.choose {
+            background-color: #0060C9;
+            color: #fff;
+          }
+          &.todayChoose {
+            background-color: #0060C9 !important;
+            color: #fff;
+          }
+        }
+        
 
-	.cal-ul {
-		position: relative;
-		display: flex;
-		justify-content: space-between;
+        .notSigned {
+          font-style: normal;
+          width: 8rpx;
+          height: 8rpx;
+          background: #fa7268;
+          border-radius: 10rpx;
+          position: absolute;
+          left: 50%;
+          bottom: 0;
+          pointer-events: none;
+        }
+        .today {
+          color: #FFFFFF;
+          background-color: #00696a;
+		  //border: 2px solid #00696a;
+        }
+        .markDayNoChoose {
+          background: #0060C9;
+        }
+        .markDayChoose {
+          background: #fff;
+        }
+        .markDay {
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          position: absolute;
+          left: 16px;
+          bottom: 4px;
+          pointer-events: none;
+        }
+      }
+    }
+  }
 
-		.cal-li {
-			width: calc(100% / 7);
-			text-align: center;
-			margin-top: 10rpx;
-			font-size: 24rpx;
-		}
-	}
-
-	.cal-weeks {
-		font-size: 28rpx;
-		font-weight: 700;
-		color: #00696a;
-	}
-
-	.cal-days {
-		font-size: 30rpx;
-		color: #333;
-	}
-
-	.cal-day-li {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		width: 63rpx;
-		height: 63rpx;
-		margin: 0 auto;
-		color: #FFFFFF;
-		font-size: 24rpx;
-	}
-
-	.cal-day-li-selected {
-		background-color: #0060C9;
-		margin-top: -8rpx;
-		height: 76rpx;
-		width: 60rpx;
-		border-radius: 30rpx;
-		color: #fff !important;
-	}
+  .hide {
+    height: 42px !important;
+  }
+  .arrowIcon {
+    width: 50px;
+    height: 23px;
+  }
+  // .weektoggle {
+  //   width: 85px;
+  //   height: 32px;
+  //   position: relative;
+  //   left: 50%;
+  //   margin-left: -42px;
+  //   bottom: -42px;
+  //   &.down {
+  //     transform: rotate(180deg);
+  //     bottom: 0;
+  //   }
+  // }
+}
 </style>

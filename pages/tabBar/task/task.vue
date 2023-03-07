@@ -21,6 +21,7 @@
 		<!-- this.$emit('changeDate', this.baseData.selectedDate); -->
 		<calendar @changeDate="changeDate"></calendar>
 		
+		
 		<view class="list task">
 			<view class="list-item-container pt20">
 				<view v-if="tasklist == ''">
@@ -28,7 +29,7 @@
 					<text class="nonetask">休息一下吧！</text>
 				</view>
 				<view v-for="item in tasklist" :key="item.id" @tap="Detail(item)">
-					<view class="list-item-content" v-for="items in item.task_items" :key="items.id" v-if="items.operator.id == userid" :class="[nowdate > item.end_at && items.finished == false ? 'bgred': null]">
+					<view class="list-item-content" v-for="items in item.task_items" :key="items.id" v-if="items.operator.id == userid" :class="[nowdate > item.end_at && items.finished == false ? 'bgred': items.delayed == true ? 'bgorange' : null]">
 						<view class="pr60 listheight" >
 							<view class="list-content-left">
 								<!-- <view class="dot">
@@ -36,7 +37,8 @@
 									<view class="full"></view>
 								</view> -->
 								<text class="title" :class="[nowdate > item.end_at && items.finished == false ? 'red': null]">{{item.name}}</text>
-								<text class="note" v-if="items.finished == true">From {{item.creator.name}} {{items.doneAt}}完成</text>
+								<text class="note" v-if="items.delayed == true">From {{item.creator.name}} 延期完成</text>
+								<text class="note" v-if="items.delayed == false && items.finished == true">From {{item.creator.name}} 正常完成</text>
 								<text class="note" v-if="nowdate < item.end_at && items.finished == false">From {{item.creator.name}} 截止{{item.end_at.slice(5,10)}}</text>
 								<text class="note" v-if="nowdate == item.end_at && items.finished == false">From {{item.creator.name}} 今日完成</text>
 								<text class="note" v-if="nowdate > item.end_at && items.finished == false">From {{item.creator.name}} 逾期{{getGraceDateBeforeNow(item.end_at)}}</text>
@@ -543,6 +545,9 @@
 
 	.bgred{
 		background-color: #FFF5F5;
+	}
+	.bgorange{
+		background-color: #FFF8EE;
 	}
 	.red{
 		color: #b92c2c;
