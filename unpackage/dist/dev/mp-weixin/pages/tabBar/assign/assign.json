@@ -1,9 +1,0 @@
-{
-  "navigationBarTitleText": "分配任务",
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "uni-icons": "/components/uni-icons/uni-icons",
-    "uni-calendar": "/components/uni-calendar/uni-calendar",
-    "uni-list": "/components/uni-list/uni-list"
-  }
-}

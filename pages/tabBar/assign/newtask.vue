@@ -229,7 +229,7 @@
 							})
 						} else {
 							uni.showModal({
-								content: res.data.message,
+								content: "项目模块还未创建，请先去创建！",
 								confirmText: "知道了",
 								showCancel: false
 							})
@@ -239,6 +239,7 @@
 			projectList: function(e) {
 				this.axios.get('project/get_all').then(res => {
 					this.projectArr = res.data.data
+					console.log('projectArr:',this.projectArr)
 					this.axios.get('module/get_all',{
 						params: {
 							//'level_id': 1,
@@ -247,7 +248,11 @@
 					}).then(res => {
 						this.moduleArr = res.data.data
 						if(this.moduleArr.length == 0){
-							this.moduleArr = [{name:"未创建"}]
+							if(this.projectArr[this.project_id].name=="日常任务"){
+								this.moduleArr = [{name:"日常任务",id:87}]
+							}else{
+								this.moduleArr = [{name:"未创建"}]
+							}
 						}
 						console.log('module:',this.moduleArr)
 					})
@@ -264,7 +269,11 @@
 				}).then(res => {
 					this.moduleArr = res.data.data
 					if(this.moduleArr.length == 0){
-						this.moduleArr = [{name:"未创建"}]
+						if(this.projectArr[this.project_id].name=="日常任务"){
+							this.moduleArr = [{name:"日常任务",id:87}]
+						}else{
+							this.moduleArr = [{name:"未创建"}]
+						}
 					}
 					console.log('module:',this.moduleArr)
 				})

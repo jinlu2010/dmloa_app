@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "项目管理",
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "uni-icons": "/components/uni-icons/uni-icons"
-  }
-}
