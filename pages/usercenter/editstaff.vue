@@ -166,8 +166,6 @@
 				}
 			}).then(res => {
 				this.phone = res.data.data.account,
-				this.dept = res.data.data.department.id,
-				this.post = res.data.data.job.id,
 				this.name = res.data.data.name,
 				this.gender_id = res.data.data.gender,
 				this.birthday = res.data.data.birthDay,
@@ -177,6 +175,12 @@
 				this.skillout = res.data.data.skill,
 				this.adminType = res.data.data.adminType,
 				this.is_manager = res.data.data.manager
+				if(res.data.data.department != null){
+					this.dept = res.data.data.department.id
+				}
+				if(res.data.data.job != null){
+					this.post = res.data.data.job.id
+				}
 				if(res.data.data.leader == null){
 					this.report = res.data.data.leader
 				}else{
@@ -185,21 +189,34 @@
 				console.log(res.data.data)
 				this.axios.get('department/get_all').then(res => {
 					this.deptArr = res.data.data
-					console.log('this.deptArr:',this.deptArr)
+					if(this.deptArr.length == 0){
+						this.deptArr = [{name:"未创建"}]
+						this.dept_id = 0
+					}
 					let deptlist = this.deptArr
 					this.dept_id = (deptlist).findIndex ((deptlist) => deptlist.id  ==  this.dept);
 					this.reportArr=[] //让列表为空，否则列表会无限增加
 					for(let i =0; i< res.data.data.length; i++){//取id值
-						this.reportArr.push({
-							id:res.data.data[i].manager.id,
-							name:res.data.data[i].manager.name,
-						})
+						if(res.data.data[i].manager != null){
+							this.reportArr.push({
+								id:res.data.data[i].manager.id,
+								name:res.data.data[i].manager.name,
+							})
+							this.reportArr = this.reportArr.filter((item, index, self) => {
+							  return index === self.findIndex(t => t.id === item.id);
+							});
+						}
 					}
 					let reportlist = this.reportArr
 					this.report_id = (reportlist).findIndex ((reportlist) => reportlist.id  ==  this.report);
 				})
 				this.axios.get('job/get_all').then(res => {
 					this.postArr = res.data.data
+					if(this.postArr.length == 0){
+						this.postArr = [{name:"未创建"}]
+						this.post_id = 0
+						return
+					}
 					let postlist = this.postArr
 					this.post_id = (postlist).findIndex ((postlist) => postlist.id  ==  this.post);
 				})
@@ -282,6 +299,9 @@
 					}
 				}).then(res => {
 					this.postArr = res.data.data
+					if(this.postArr.length == 0){
+						this.postArr = [{name:"未创建"}]
+					}
 					this.post_id = 0
 				})
 			},

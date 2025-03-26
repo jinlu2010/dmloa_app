@@ -1,9 +1,9 @@
 module.exports = {
     devServer: {
         proxy: {
-            '/api': {// 使用"/api"来代替"http://f.apiplus.c"
-				target: 'http://110.40.229.45:8082/',
-				//target: 'http://www.iyoudian.cn:7070/',
+            '/api': {
+				target: 'https://www.thebyte.com.cn/oa/',
+				// target: 'http://127.0.0.1:8000/', // 源地址
                 changeOrigin: true, // 改变源
                 pathRewrite: {
                     '^/api': '' // 路径重写

@@ -340,6 +340,11 @@
 	        "iconPath": "static/image/icon04.png",
 	        "selectedIconPath": "static/image/icon04_G.png",
 	        "text": "项目管理"
+	    },{
+	        "pagePath": "pages/usercenter/usercenter",
+	        "iconPath": "static/image/icon18.png",
+	        "selectedIconPath": "static/image/icon18_G.png",
+	        "text": "个人中心"
 	    }]
 	},
 	"condition": { //模式配置，仅开发期间生效

@@ -7,9 +7,9 @@
 						<image :src="imgUrl"></image>
 					</view>
 		 			<view class="titleText">{{titleText}}</view> 
-		 			<view class="RightButton">
+		 			<!-- <view class="RightButton">
 		 				<uni-icons type="contact" size="32" color="white" @tap="UserCenter"></uni-icons>
-		 			</view>			
+		 			</view>	 -->		
 		 		</view>
 		 	</view>
 		</view>
@@ -17,7 +17,7 @@
 		<view class="tabbar">
 			<view class="bgtab"></view>
 			<view class="tab-title">
-				<view @tap="teamList" :class="{active:btncontent == 0}">团队绩效</view>
+				<view @tap="teamList" :class="{active:btncontent == 0}" >团队绩效</view>
 				<view @tap="myList" :class="{active:btncontent == 1}">我的绩效</view>
 			</view>
 		</view>
@@ -124,6 +124,7 @@
 			return {
 				titleText:"绩效考核",
 				imgUrl:"../../../static/image/userface.png",
+				// imgUrl:"../../../static/image/userface2.png",
 				showCalendar: true,
 				info: {
 					date: new Date().toISOString().slice(0, 10),

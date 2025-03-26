@@ -159,24 +159,39 @@
 		onLoad() {
 			this.axios.get('department/get_all').then(res => {
 				this.deptArr = res.data.data
+				if(this.deptArr.length == 0){
+					this.deptArr = [{name:"未创建"}]
+				}
 				this.reportArr=[] //让列表为空，否则列表会无限增加
 				for(let i =0; i< res.data.data.length; i++){//取id值
-					this.reportArr.push({
-						id:res.data.data[i].manager.id,
-						name:res.data.data[i].manager.name,
-					})
+					if(res.data.data[i].manager != null){
+						this.reportArr.push({
+							id:res.data.data[i].manager.id,
+							name:res.data.data[i].manager.name,
+						})
+						this.reportArr = this.reportArr.filter((item, index, self) => {
+						  return index === self.findIndex(t => t.id === item.id);
+						});
+					}
 				}
 				this.axios.get('job/get_all',{
 					params: {
 						'department_id': this.deptArr[this.dept_id].id
 					}
 				}).then(res => {
+					console.log("postArr:",res.data.data)
 					this.postArr = res.data.data
+					if(this.postArr.length == 0){
+						this.postArr = [{name:"未创建"}]
+					}
 				})
 			})
 			
 			// this.axios.get('employee/get_all').then(res => {
 			// 	this.reportArr = res.data.data
+			// 	if(this.reportArr.length == 0){
+			// 		this.reportArr = [{name:"未创建"}]
+			// 	}
 			// 	console.log('user:',this.reportArr)
 			// })
 		},
@@ -251,6 +266,9 @@
 					}
 				}).then(res => {
 					this.postArr = res.data.data
+					if(this.postArr.length == 0){
+						this.postArr = [{name:"未创建"}]
+					}
 				})
 			},
 			postChange: function(e) {

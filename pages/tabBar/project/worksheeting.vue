@@ -9,12 +9,12 @@
 		
 		
 		<view class="tab-content" style="display: block;">
-			<view class="list project">
-				<view class="list-item-container rightlist listheight">
-					<view v-if="taskdetail == ''">
-						<text class="none" style="height: 110rpx;">还没有创建任务哦~</text>
-					</view>
-					<view class="list-item-content"  v-for="item in taskdetail" :key="item.id">
+			<view class="list">
+				<view v-if="taskdetail == ''">
+					<text class="none">还没有创建任务哦~</text>
+				</view>
+				<view class="list-item-container rightlist project">
+					<view class="list-item-content listheight"  v-for="item in taskdetail" :key="item.id">
 						<view class="list-content-left">
 							<text class="title">{{item.name}}</text>
 							<text class="note">To {{item.operator}}</text>
@@ -65,10 +65,11 @@
 						'module_id':this.module_id
 					}
 				}).then(res => {
+					console.log(res);
 					this.taskdetail=[] //让列表为空，否则列表会无限增加
 					for(let i =0; i< res.data.data.length; i++){//取id值
 						for(let j=0; j<res.data.data[i].task_items.length;j++){
-							if(res.data.data[i].task_items[j].is_finished==true){
+							if(res.data.data[i].task_items[j].finished==true){
 								this.finished='已完成'
 							}else{
 								this.finished='进行中'
@@ -105,5 +106,11 @@
 	}
 	.hidden{
 		display: none !important;
+	}
+	/* .project{
+		padding-bottom: 20rpx;
+	} */
+	.none{
+		background-color: #EEEEEE;
 	}
 </style>

@@ -6,23 +6,6 @@
 					<view class="title">任务标题</view>
 					<input placeholder="请输入任务内容" class="input" v-model="name" />
 				</view>
-				<!-- <view class="form-item">
-					<view class="title">开始时间</view>
-					<picker mode="date" :value="start_at" :start="startDate" :end="endDate" @change="startDateChange">
-						<view class="input">{{start_at}}
-							<uni-icons type="arrowdown" size="12" color="#999" class="pl20"></uni-icons>
-						</view>
-					</picker>
-				</view>
-				<view class="form-item">
-					<view class="title">完成时间</view>
-					<picker mode="date" :value="end_at" :start="startDate" :end="endDate" @change="endDateChange">
-						<view class="input">{{end_at}}
-							<uni-icons type="arrowdown" size="12" color="#999" class="pl20"></uni-icons>
-						</view>
-					</picker>
-				</view> -->
-				
 				<view class="form-item">
 					<view class="title">任务周期</view>
 					<view style="width: 280px;">
@@ -191,12 +174,22 @@
 				console.log('maskClick事件:', e);
 			},
 			addTask: function() {
+				console.log("111")
 				if(this.user_type === ''){
 					this.is_assigned = false
 				}else{
 					this.is_assigned = true
 				}
 				//console.log(typeof(this.user_ids))
+				// console.log(this.moduleArr)
+				// if(this.moduleArr.length == 0){
+				// 	uni.showModal({
+				// 		content: "项目模块还未创建",
+				// 		confirmText: "知道了",
+				// 		showCancel: false
+				// 	})
+				// 	return
+				// }
 				let data = {
 					operator_user_ids: this.user_ids,
 					start_at: this.start_at,
@@ -253,6 +246,9 @@
 						}
 					}).then(res => {
 						this.moduleArr = res.data.data
+						if(this.moduleArr.length == 0){
+							this.moduleArr = [{name:"未创建"}]
+						}
 						console.log('module:',this.moduleArr)
 					})
 				})
@@ -267,6 +263,9 @@
 					}
 				}).then(res => {
 					this.moduleArr = res.data.data
+					if(this.moduleArr.length == 0){
+						this.moduleArr = [{name:"未创建"}]
+					}
 					console.log('module:',this.moduleArr)
 				})
 			},
@@ -296,7 +295,7 @@
 						.then(res => {
 							this.executorArr = res.data.data
 							console.log('user:',this.executorArr)
-							/* if(res.data.data.length==0){
+							if(res.data.data.length==0){
 								uni.showModal({
 									title:"提示",
 									content:'抱歉，没有可执行人！',
@@ -305,7 +304,7 @@
 							}else{
 								this.executorArr = res.data.data
 								console.log('executor:',this.executorArr)
-							} */
+							}
 						})
 				}
 			},

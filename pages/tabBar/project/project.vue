@@ -8,7 +8,7 @@
 					</view>
 			 		<view class="titleText">{{titleText}}</view> 
 			 		<view class="RightButton">
-			 			<uni-icons type="contact" size="32" color="white" @tap="UserCenter"></uni-icons>
+			 			<!-- <uni-icons type="contact" size="32" color="white" @tap="UserCenter"></uni-icons> -->
 			 			<uni-icons type="plus" size="32" color="white" @tap="NewProject"></uni-icons>
 			 		</view>			
 			 	</view>
@@ -116,6 +116,7 @@
 			return {
 				titleText:"项目管理",
 				imgUrl:"../../../static/image/userface.png",
+				// imgUrl:"../../../static/image/userface2.png",
 				btncontent: 0,
 				bigmodulelist:[],
 				projectlist:[],

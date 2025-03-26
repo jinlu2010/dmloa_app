@@ -54,7 +54,8 @@
 			return {
 				id:'',
 				upload_id:0,
-				iconUrl: require('../../static/image/userface.png'),
+				// iconUrl: require('../../static/image/userface.png'),
+				iconUrl: require('../../static/image/userface2.png'),
 				name: '',
 				goal: '',
 				phone: '',

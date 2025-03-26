@@ -114,11 +114,12 @@
 		},
 		onLoad(){
 			this.axios.get('profile/get').then(res => {
+				console.log("res",res)
 				this.username = res.data.data.name;
 				this.userid = res.data.data.id;
-				this.post_id = res.data.data.job.id;
-				this.dept_id = res.data.data.department.id;
-				this.postname = res.data.data.job.name;
+				// this.post_id = res.data.data.job.id;
+				// this.dept_id = res.data.data.department.id;
+				// this.postname = res.data.data.job.name;
 				this.adminType = res.data.data.adminType;
 				this.manager = res.data.data.manager;
 				if(this.adminType == 0){
@@ -126,6 +127,7 @@
 				}else{
 					this.admin = true;
 				}
+				console.log("admin",this.admin)
 			})
 		},
 		methods: {

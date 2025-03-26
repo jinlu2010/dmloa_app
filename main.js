@@ -45,7 +45,8 @@ export function createApp() {
 }); */
 
 
-let baseURL = 'http://110.40.229.45:8082/'
+let baseURL = 'https://www.thebyte.com.cn/oa/'
+// let baseURL = 'http://127.0.0.1:8082/'
 axios.defaults.adapter = function(config) {
 	let token = uni.getStorageSync("token")
 	config.headers = {

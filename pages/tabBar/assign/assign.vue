@@ -8,7 +8,7 @@
 					</view>
 					<view class="titleText">{{titleText}}</view>
 					<view class="RightButton">
-						<uni-icons type="contact" size="32" color="white" @tap="UserCenter"></uni-icons>
+						<!-- <uni-icons type="contact" size="32" color="white" @tap="UserCenter"></uni-icons> -->
 						<uni-icons type="plus" size="32" color="white" @tap="NewTask"></uni-icons>
 					</view>
 				</view>
@@ -94,12 +94,12 @@
 					<view class="list-item-content pr60 listheight" v-for="item in delaylist" :key="item.id" @tap="Detail(item)">
 						<view class="list-content-left">
 							<text class="title">{{item.name}}</text>
-							<view class="operator">To<text class="pl20">{{}}</text>
+							<view class="operator">To<text class="pl20">{{item.operator}}</text>
 							</view>
 						</view>
 						<view class="list-content-middle">
-							<text class="note">已延期xx天</text>
-							<text class="date grey">至{{}}</text>
+							<text class="note">已逾期{{getGraceDateBeforeNow(item.end_at)}}</text>
+							<text class="date grey">至{{item.end_at}}</text>
 						</view>
 						<view class="list-content-right">
 							<button class="btngreen" @tap.stop="EditTask(item)">修改</button>
@@ -115,7 +115,53 @@
 	import uniIcons from '@/components/uni-icons/uni-icons.vue'
 	import uniCalendar from '@/components/uni-calendar/uni-calendar.vue'
 	import uniList from '@/components/uni-list/uni-list.vue'
-
+	
+	function getDateBeforeNow(stringTime) {
+		//console.log("传参未格式化", stringTime);
+		stringTime = new Date(stringTime.replace(/-/g, '/'))
+	
+		// 统一单位换算
+		var minute = 1000 * 60;
+		var hour = minute * 60;
+		var day = hour * 24;
+		var week = day * 7;
+		var month = day * 30;
+		var year = month * 12;
+	
+		var time1 = new Date().getTime(); //当前的时间戳
+		console.log("当前时间", time1);
+	
+		// 对时间进行毫秒单位转换
+		var time2 = new Date(stringTime).getTime(); //指定时间的时间戳
+	
+		//console.log("传过来的时间", time2);
+	
+		var time = time1 - time2;
+		//console.log("计算后的时间", time);
+	
+		var result = null;
+		if (time < 0) {
+		// alert("设置的时间不能早于当前时间！");
+			result = stringTime;
+		} else if (time / year >= 1) {
+			result = parseInt(time / year) + "年";
+		} else if (time / month >= 1) {
+			result = parseInt(time / month) + "月";
+		} else if (time / week >= 1) {
+			result = parseInt(time / week) + "周";
+		} else if (time / day >= 1) {
+			result = parseInt(time / day) + "天";
+		} else if (time / hour >= 1) {
+			result = parseInt(time / hour) + "小时";
+		} else if (time / minute >= 1) {
+			result = parseInt(time / minute) + "分钟";
+		} else {
+			result = "刚刚";
+		}
+		//console.log("格式化后的时间", result);
+		return result;
+	}
+	
 	export default {
 		components: {
 			uniIcons,
@@ -126,6 +172,7 @@
 			return {
 				titleText: "分配任务",
 				imgUrl: "../../../static/image/userface.png",
+				// imgUrl: "../../../static/image/userface2.png",
 				showCalendar: true,
 				info: {
 					date: new Date().toISOString().slice(0, 10),
@@ -162,6 +209,9 @@
 			})
 		},
 		methods: {
+			getGraceDateBeforeNow(date){
+				return getDateBeforeNow(date)
+			},
 			reload() {
 				const pages = getCurrentPages()
 				const curPage = pages[pages.length - 1]

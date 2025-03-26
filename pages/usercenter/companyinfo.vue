@@ -4,6 +4,7 @@
 			<view class="form-item">
 				<view class="title">企业头像</view>
 				<image src="../../static/image/userface.png" class="logo"></image>
+				<!-- <image src="../../static/image/userface2.png" class="logo"></image> -->
 			</view>
 			<view class="form-item">
 				<view class="title">企业名称</view>

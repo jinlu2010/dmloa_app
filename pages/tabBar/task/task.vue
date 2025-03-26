@@ -7,23 +7,23 @@
 						<image :src="imgUrl"></image>
 					</view>
 					<view class="titleText">{{titleText}}</view>
-					<view class="RightButton">
-						<uni-icons type="contact" size="32" color="white" @tap="UserCenter"></uni-icons>
+					<!-- <view class="RightButton">
+						<uni-icons type="contact" size="32" color="white" @tap="UserCenter"></uni-icons> -->
 						<!-- <button class="calendar-button" type="button" @tap="open">{{info.date}}</button>
 						<uni-calendar ref="calendar" :selected="info.selected" :showMonth="false" :date="info.date"
 							:insert="false" :lunar="false" :range="false" @confirm="confirm" /> -->
-					</view>
+					<!-- </view> -->
 				</view>
 			</view>
 		</view>
 		<view class="place"></view>
 		<view class="bgcalendar"></view>
 		<!-- this.$emit('changeDate', this.baseData.selectedDate); -->
-		<calendar @changeDate="changeDate"></calendar>
+		<calendar @setDate="changeDate"></calendar>
 		
 		
 		<view class="list task">
-			<view class="list-item-container pt20">
+			<view class="list-item-container">
 				<view v-if="tasklist == ''">
 					<text class="nonetask">今天没有安排任务哦~</text>
 					<text class="nonetask">休息一下吧！</text>
@@ -40,7 +40,7 @@
 								<text class="note" v-if="items.delayed == true">From {{item.creator.name}} 延期完成</text>
 								<text class="note" v-if="items.delayed == false && items.finished == true">From {{item.creator.name}} 正常完成</text>
 								<text class="note" v-if="nowdate < item.end_at && items.finished == false">From {{item.creator.name}} 截止{{item.end_at.slice(5,10)}}</text>
-								<text class="note" v-if="nowdate == item.end_at && items.finished == false">From {{item.creator.name}} 今日完成</text>
+								<text class="note" v-if="nowdate == item.end_at && items.finished == false">From {{item.creator.name}} 截止今日</text>
 								<text class="note" v-if="nowdate > item.end_at && items.finished == false">From {{item.creator.name}} 逾期{{getGraceDateBeforeNow(item.end_at)}}</text>
 							</view>
 							<!-- <view class="list-content-right" v-if="item.task_items[this.taskItemId].finished == false && item.task_items[this.taskItemId].stopped == false">
@@ -233,6 +233,7 @@
 				tasklist: [],
 				titleText: "我的任务",
 				imgUrl: "../../../static/image/userface.png",
+				// imgUrl: "../../../static/image/userface2.png",
 				showCalendar: true,
 				info: {
 					date: new Date().toISOString().slice(0, 10),
@@ -339,7 +340,7 @@
 			taskList(){
 				this.axios.get('task/get_all', {
 					params: {
-						//'is_assigned': true,
+						// 'is_assigned': true,
 						'is_mine':true,
 						'start_at':this.date
 					}
@@ -392,7 +393,7 @@
 			},
 
 			changeDate(date) {
-				this.date = date.ym
+				this.date = date.date
 				console.log('date:', this.date)
 				this.taskList();
 			},

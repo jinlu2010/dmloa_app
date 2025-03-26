@@ -2,16 +2,17 @@
   <div class="calendar-wrapper">
     <!-- 月份变换区 -->
     <div class="header rowJcAc" v-if="headerBar">
-      <div class="arrowIcon rowJcAc" @click="changeMonth('pre')" v-if="monthOpen">
-        <van-icon name="arrow-left" color="#9EA8BA" size="12px"/>
+		
+      <div class="arrowIcon rowJcAc" >
+		<uni-icons type="arrowleft" size="18" color="#FFFFFF" @click="changeMonth('pre')" v-if="monthOpen"></uni-icons>
       </div>
-      
-      <!-- <div class="pre " @click="changeMonth('pre')">上个月</div> -->
+
       <div class="yearMonth">{{y+'-'+formatNum(m)}}</div>
-      <div class="arrowIcon rowJcAc" @click="changeMonth('next')" v-if="monthOpen">
-        <van-icon name="arrow" color="#9EA8BA" size="12px"/>
+	  
+      <div class="arrowIcon rowJcAc" >
+		<uni-icons type="arrowright" size="18" color="#FFFFFF" @click="changeMonth('next')" v-if="monthOpen"></uni-icons>
       </div>
-      <!-- <div class="next" @click="changeMonth('next')">下个月</div> -->
+	  
     </div>
 
     <!-- 星期区 -->
@@ -57,6 +58,7 @@
 </template>
 
 <script>
+	import uniIcons from '@/components/uni-icons/uni-icons.vue'
 export default {
   name: "ren-calendar",
   props: {
@@ -322,7 +324,7 @@ export default {
         }
       }
       this.$emit("setDate", response);
-      //   console.log(response);
+        // console.log(response);
     },
     //改变年月
     changYearMonth(y, m) {
@@ -379,12 +381,23 @@ export default {
   border-radius: 0px 0px 20px 20px;
   position: relative;
   .header {
+	display: flex;
+	width: 100%;
+	
+	.arrowIcon{
+		float:left;
+		line-height:40px;
+		height:40px;
+		width: 35%;
+	}
     .yearMonth {
       font-size: 16px;
-      line-height: 23px;
       color: #FFFFFF;
-      margin: 0 32px;
-	  padding-top: 10px;
+      // margin: 0 32px;
+	  float:left;
+	  line-height:40px;
+	  height:40px;
+	  width:30%
     }
   }
 

@@ -2,6 +2,7 @@
 	<view>
 		<view class="login-img">
 			<image src="../../static/image/login.png"></image>
+			<!-- <image src="../../static/image/login2.png"></image> -->
 		</view>
 
 		<view class="login-form">

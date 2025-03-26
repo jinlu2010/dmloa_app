@@ -5,14 +5,14 @@
 				<view class="form-item">
 					<view class="moduletitle">
 						员工列表
-						<uni-icons type="plus" size="24" color="#999" class="right pt4" @tap="AddStaff"></uni-icons>
+						<uni-icons type="plus" size="24" color="#999" class="right" @tap="AddStaff"></uni-icons>
 					</view>
 					<view class="form-list">
 						<view class="form-list-item" @tap="EditStaff(item)" v-for="item in stafflist" :key="item.id">
 							<view class="staffname">{{item.name}}</view>
-							<view class="staffpost">{{item.job.name}}</view>
+							<view class="staffpost">{{item.department.name}}</view>
 							<view class="staffcontact">{{item.account}}</view>
-							<uni-icons type="arrowright" size="18" color="#CCC" class="right pt10"></uni-icons>
+							<uni-icons type="arrowright" size="18" color="#CCC" class="right"></uni-icons>
 						</view>
 					</view>
 				</view>
@@ -75,14 +75,14 @@
 
 <style>
 	.staffname{
-		width: 30%;
+		width: 25%;
 		display: block;
 		font-size:28rpx;
 		line-height:90rpx;
 		float: left;
 	}
 	.staffpost{
-		width: 30%;
+		width: 35%;
 		display: block;
 		font-size:28rpx;
 		line-height:90rpx;
@@ -92,7 +92,7 @@
 		width: 30%;
 		display: block;
 		font-size:28rpx;
-		line-height:96rpx;
+		line-height:90rpx;
 		float: left;
 	}
 </style>

@@ -2,6 +2,7 @@
 	<view>
 		<view class="login-img">
 			<image src="../../static/image/login.png"></image>
+			<!-- <image src="../../static/image/login2.png"></image> -->
 		</view>
 		
 		<view class="login-button">
@@ -29,80 +30,82 @@
 				token:''
 			}
 		},
-		onLoad() {
-			let that = this
-			uni.login({
-				provider: 'weixin',
-				success: function(loginRes) {
-					that.wxcode=loginRes.code
-					console.log('wxcode:',that.wxcode)
-				}
-			})
-		},
+		// onLoad() {
+		// 	let that = this
+		// 	uni.login({
+		// 		provider: 'weixin',
+		// 		success: function(loginRes) {
+		// 			that.wxcode=loginRes.code
+		// 			console.log('wxcode:',that.wxcode)
+		// 		},
+		// 		fail: function (err) {
+		// 			// 登录授权失败  
+		// 			// err.code是错误码
+		// 			console.log( err.code)
+		// 		}
+		// 	})
+		// },
 		methods: {
 			getUserInfo(e){
-				if (e.detail.errMsg == "getUserInfo:ok") { //用户决绝授权
-					console.log('getUserInfo:',e.detail)
-					this.axios.post('weixin/login', {
-						code: this.wxcode,
-						companyId:1
-					}).then(res => {
-						console.log(res)
-						if (res.data.data.is_need_phone == false) {
-							uni.setStorageSync('token', res.data.data.token);
-							uni.showToast({
-								title: "登录成功!",
-								duration: 2000
+				console.log(e)
+				let that = this
+				uni.login({
+					provider: 'weixin',
+					success: function(loginRes) {
+						that.wxcode = loginRes.code
+						console.log('wxcode:',that.wxcode)
+						// 登录成功
+						if (e.detail.errMsg == "getUserInfo:ok") { //用户决绝授权
+							console.log('getUserInfo:',e.detail)
+							that.axios.post('weixin/login', {
+								code: that.wxcode, 
+								companyId:1
+							}).then(res => {
+								console.log(res)
+								if (res.data.data.is_need_phone == false) {
+									uni.setStorageSync('token', res.data.data.token);
+									uni.showToast({
+										title: "登录成功!",
+										duration: 2000
+									})
+									setTimeout(function() {
+										uni.switchTab({
+											url: '../tabBar/task/task'
+										})
+									}, 2000)
+								} else {
+									uni.setStorageSync('token', res.data.data.token);
+									uni.navigateTo({
+										url: 'bindphone'
+									})
+								}
+								if(res.data.code != 200){
+									uni.showModal({
+										content:res.data.message,
+										confirmText: "知道了",
+										showCancel: false
+									})
+								}
 							})
-							setTimeout(function() {
-								uni.switchTab({
-									url: '../tabBar/task/task'
-								})
-							}, 2000)
 						} else {
-							uni.setStorageSync('token', res.data.data.token);
-							uni.navigateTo({
-								url: 'bindphone'
+							console.log(e.detail)
+							uni.showModal({
+								content: e.detail,
+								confirmText: "知道了",
+								showCancel: false
 							})
-						}
-					})
-					
-					
-					
-					// uni.request({
-					// 	method: 'post',
-					// 	url: 'http://47.100.125.167:8082/weixin/login?code=' + this.wxcode +'&companyId=' + 1,
-					// 	success: (res) => {
-					// 		console.log(res.data)
-					// 		// if(res.data.is_need_phone==false){
-					// 		// 	uni.setStorageSync('token', res.data.token);
-					// 		// 	uni.switchTab({
-					// 		// 		url: '../tabBar/task/task'
-					// 		// 	})
-					// 		// }else{
-					// 		// 	uni.setStorageSync('token', res.data.token);
-					// 		// 	uni.navigateTo({
-					// 		// 		url: 'bindphone'
-					// 		// 	})
-					// 		// }
-					// 	},
-					// 	fail: (err) => {
-					// 		console.log(err)
-					// 		uni.showModal({
-					// 			content: err,
-					// 			confirmText: "知道了",
-					// 			showCancel: false
-					// 		})
-					// 	}
-					// })	
-				} else {
-					console.log(e.detail)
-					uni.showModal({
-						content: e.detail,
-						confirmText: "知道了",
-						showCancel: false
-					})
-				}
+						} 
+					},
+					fail: function (err) {
+						// 登录授权失败  
+						// err.code是错误码
+						console.log( err.code)
+						uni.showToast({
+							title: err.code,
+							duration: 2000
+						})
+					}
+				})
 			}
 		}
 	}
