@@ -1,0 +1,14 @@
+
+page{
+	background-color: #EEEEEE;
+}
+.hidden{
+	display: none !important;
+}
+/* .project{
+	padding-bottom: 20rpx;
+} */
+.none{
+	background-color: #EEEEEE;
+}
+

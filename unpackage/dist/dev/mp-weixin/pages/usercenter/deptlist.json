@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "部门岗位列表",
+  "usingComponents": {
+    "uni-icons": "/components/uni-icons/uni-icons"
+  }
+}

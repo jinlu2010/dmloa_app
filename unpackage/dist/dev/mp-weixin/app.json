@@ -1,0 +1,100 @@
+{
+  "pages": [
+    "pages/tabBar/task/task",
+    "pages/tabBar/task/detail",
+    "pages/tabBar/check/check",
+    "pages/tabBar/assign/assign",
+    "pages/tabBar/project/project",
+    "pages/tabBar/project/projectdetail",
+    "pages/tabBar/project/newproject",
+    "pages/tabBar/project/bigmoduleing",
+    "pages/tabBar/project/newbigmodule",
+    "pages/tabBar/project/newsmallmodule",
+    "pages/tabBar/project/editbigmodule",
+    "pages/tabBar/project/editbigmoduledetail",
+    "pages/tabBar/project/editsmallmodule",
+    "pages/tabBar/project/editsmallmoduledetail",
+    "pages/tabBar/project/worksheeting",
+    "pages/tabBar/project/newworksheet",
+    "pages/tabBar/project/editworksheet",
+    "pages/tabBar/project/editworksheetdetail",
+    "pages/tabBar/project/editproject",
+    "pages/tabBar/project/smallmoduleing",
+    "pages/tabBar/project/bigmoduleed",
+    "pages/tabBar/project/worksheeted",
+    "pages/tabBar/project/smallmoduleed",
+    "pages/tabBar/assign/newtask",
+    "pages/tabBar/assign/assigntask",
+    "pages/tabBar/assign/edittask",
+    "pages/detail/detail01",
+    "pages/detail/detail02",
+    "pages/usercenter/usercenter",
+    "pages/usercenter/personalfile",
+    "pages/usercenter/positionfile",
+    "pages/usercenter/department",
+    "pages/usercenter/feedback",
+    "pages/usercenter/team",
+    "pages/usercenter/message",
+    "pages/usercenter/mykpi",
+    "pages/usercenter/teamkpi",
+    "pages/usercenter/companyinfo",
+    "pages/usercenter/companyedit",
+    "pages/usercenter/stafflist",
+    "pages/usercenter/addstaff",
+    "pages/usercenter/editstaff",
+    "pages/usercenter/deptlist",
+    "pages/usercenter/editdept",
+    "pages/usercenter/editpost",
+    "pages/usercenter/adddept",
+    "pages/usercenter/addpost",
+    "pages/login/login",
+    "pages/login/bindphone",
+    "pages/404/404"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "",
+    "navigationBarBackgroundColor": "#004343",
+    "backgroundColor": "#EEEEEE"
+  },
+  "tabBar": {
+    "color": "#aaaaaa",
+    "selectedColor": "#004343",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/tabBar/task/task",
+        "iconPath": "static/image/icon01.png",
+        "selectedIconPath": "static/image/icon01_G.png",
+        "text": "我的任务"
+      },
+      {
+        "pagePath": "pages/tabBar/check/check",
+        "iconPath": "static/image/icon02.png",
+        "selectedIconPath": "static/image/icon02_G.png",
+        "text": "绩效考核"
+      },
+      {
+        "pagePath": "pages/tabBar/assign/assign",
+        "iconPath": "static/image/icon03.png",
+        "selectedIconPath": "static/image/icon03_G.png",
+        "text": "分配任务"
+      },
+      {
+        "pagePath": "pages/tabBar/project/project",
+        "iconPath": "static/image/icon04.png",
+        "selectedIconPath": "static/image/icon04_G.png",
+        "text": "项目管理"
+      },
+      {
+        "pagePath": "pages/usercenter/usercenter",
+        "iconPath": "static/image/icon18.png",
+        "selectedIconPath": "static/image/icon18_G.png",
+        "text": "个人中心"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

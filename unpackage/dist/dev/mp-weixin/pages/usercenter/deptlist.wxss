@@ -1,0 +1,39 @@
+
+.dept{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	line-height:90rpx;
+	margin-top: 20rpx;
+}
+.depttitle{
+	font-size:32rpx;
+	width: 50%;
+}
+.deptname{
+	width: 100%;
+	display: block;
+	font-size:32rpx;
+	line-height:90rpx;
+	float: left;
+}
+.deptname text{
+	font-size: 32rpx;
+}
+.btndept{
+	border-radius: 50rpx;
+	font-size: 28rpx;
+	width:200rpx;
+	margin-left: 20rpx;
+}
+.pl40{
+	padding: 0 0 0 40rpx;
+}
+.w200{
+	width:200rpx !important;
+}
+.form-item{
+	margin: 40rpx 0 !important;
+	border: 0 !important;
+}
+

@@ -1,0 +1,9 @@
+
+page{
+	background-color: #EEEEEE;
+}
+uni-icons{
+	line-height: 108rpx !important;
+	height: 90rpx !important;
+}
+

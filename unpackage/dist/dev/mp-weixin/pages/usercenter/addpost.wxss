@@ -1,0 +1,23 @@
+
+.textarea-content{
+	display: flex;
+	justify-content: space-between
+}
+.lh90{
+	line-height: 90rpx;
+}
+.addcontent{
+	display: block;
+	margin: 0 auto;
+	text-align: center;
+}
+.wd100{
+	width: 100%;
+}
+.wd25{
+	width: 25%;
+}
+.btn{
+	padding-bottom: 40rpx;
+}
+

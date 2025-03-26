@@ -1,0 +1,8 @@
+
+page{
+	background-color: #EEEEEE;
+}
+.hidden{
+	display: none !important;
+}
+

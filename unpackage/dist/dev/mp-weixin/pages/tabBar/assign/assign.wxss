@@ -1,0 +1,12 @@
+
+.operator{
+	color: #999999;
+	font-size: 24rpx;
+}
+.hidden{
+	display: none !important;
+}
+.delay{
+	margin-top: 0 !important;
+}
+

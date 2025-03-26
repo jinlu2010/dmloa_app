@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "编辑项目",
+  "usingComponents": {
+    "uni-icons": "/components/uni-icons/uni-icons",
+    "uni-datetime-picker": "/uni_modules/uni-datetime-picker/components/uni-datetime-picker/uni-datetime-picker"
+  }
+}

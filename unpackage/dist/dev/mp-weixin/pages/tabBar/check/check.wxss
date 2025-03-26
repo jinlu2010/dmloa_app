@@ -1,0 +1,13 @@
+
+.nonetask{
+	font-size: 28rpx;
+	text-align: center;
+	line-height: 120rpx;
+	color: #999999;
+	display: block;
+}
+.lh120{
+	line-height: 120rpx;
+}
+
+

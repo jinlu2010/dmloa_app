@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "新建部门",
+  "usingComponents": {
+    "uni-icons": "/components/uni-icons/uni-icons"
+  }
+}
